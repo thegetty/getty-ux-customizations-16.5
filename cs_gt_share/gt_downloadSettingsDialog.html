@@ -1,0 +1,100 @@
+<link rel="import" href="./gt_downloadPrepareDialog.js" />
+
+<template id="DownloadPreferencesDialog" ot-template>
+	<ot-view ot-freeflow ot-view-type="DownloadPreferencesDialogView" ot-view-props='{"name" : "downloadPrefDialog", "type" : "downloadPrefDialog"}'></ot-view>
+</template>
+
+<template id="DownloadPreferencesDialogView_downloadFormat_gt" ot-template ot-view="DownloadPreferencesDialogView">
+<div class="ot-download-preference-options-title">
+	<ot-i18n>Asset resolution</ot-i18n>
+</div>
+<div class="ot-download-select-options ot-asset-resolution">
+	<!--ot-select autofocus class="ot-download-select-options ot-asset-resolution">
+		<option id="ot-download-original" value="original_files">
+				<ot-i18n>Original</ot-i18n>
+		</option>
+		<option id="ot-download-lowres" value="preview">
+				<ot-i18n>Preview (Low resolution)</ot-i18n>
+		</option>
+	</ot-select-->
+
+	<div id="downloadLowRes" class="ot-download-lowres">
+		<input id="ot-download-lowres" name="ot-asset-resolution" value="preview" type="radio" class="ot-radio">
+		<label for="ot-download-lowres" ><ot-i18n>Preview (Low resolution)</ot-i18n></label>
+	</div>
+</div>
+</template>
+
+<template id="DownloadPreferencesDialogView_downloadOptions" ot-template ot-view="DownloadPreferencesDialogView">
+<div class="ot-download-preference-options-title">
+	<ot-i18n>Delivery format</ot-i18n>
+	<span class="ot-download-preference-info-icon"></span>
+</div>
+<div class="ot-download-select-options ot-download-format">
+	<!--ot-select class="ot-download-select-options ot-download-format" onchange="DownloadPreferencesDialogView.downloadOptionsChanged(event);">
+		<option id="ot-download-one-file" value="individual_files">
+				<ot-i18n>Individual files</ot-i18n>
+		</option>
+		<option id="ot-download-zip-file" value="zip_file">
+				<ot-i18n>ZIP file</ot-i18n>
+		</option>
+	</ot-select-->
+
+	<div id="downloadOneFile" class="ot-download-one-file">
+		<input id="ot-download-one-file" name="ot-download-format" value="individual_files" type="radio" class="ot-radio" onchange="DownloadPreferencesDialogView.downloadOptionsChanged(event);">
+		<label for="ot-download-one-file" ><ot-i18n>Individual files</ot-i18n></label>
+	</div>
+	<div id="downloadZipFile" class="ot-download-zip-file">
+		<input id="ot-download-zip-file" name="ot-download-format" value="zip_file" type="radio" class="ot-radio" onchange="DownloadPreferencesDialogView.downloadOptionsChanged(event);">
+		<label for="ot-download-zip-file" ><ot-i18n>ZIP file</ot-i18n></label>
+	</div>
+</div>
+</template>
+
+<template id="DownloadPreferencesDialogView_content" ot-template ot-view="DownloadPreferencesDialogView">
+	<ot-dialog-header ot-platform="tablet">
+			<div class="ot-modal-dialog-header-buttons">
+				<button type="button" class="ot-button ot-button-save-continue" onclick="DownloadPreferencesDialogView.saveAndContinue(event);">
+					<ot-i18n>Save and continue</ot-i18n>
+				</button>
+				<span class="ot-button secondary" onclick="otui.DialogUtils.cancelDialog(this);">
+					<ot-i18n>Cancel</ot-i18n>
+				</span>
+			</div>
+		</ot-dialog-header>
+		<ot-dialog-body>
+			<div class="ot-wrapper ot-download-body">
+				<div class="ot-download-preference-title"> 
+					<ot-i18n>Set your download preferences.</ot-i18n>
+				</div>
+				<span class="ot-download-preference-options" template="DownloadPreferencesDialogView_downloadFormat"></span>
+				<span class="ot-download-preference-options" template="DownloadPreferencesDialogView_downloadOptions"></span>
+				<span class="ot-download-preference-info-icon"></span>
+				<div class="ot-download-format-options">
+					<input id="ot-download-email-notify" name="send_notification" type="checkbox" class="ot-checkbox ot-download-email-notify"/>
+					<label for="ot-download-email-notify"><ot-i18n>Notify me when my files are ready to be downloaded</ot-i18n></label>
+				</div>
+				<div class="ot-download-format-options">
+					<input id="ot-download-remember-settings" name="remember_download_settings" type="checkbox" class="ot-checkbox ot-download-remember-settings"/>
+					<label for="ot-download-remember-settings"><ot-i18n>Do not show download preferences again</ot-i18n></label>
+				</div>
+			</div>
+		</ot-dialog-body>
+		<ot-dialog-footer ot-platform="desktop">
+			<div class="ot-modal-dialog-footer-buttons">
+				<div class="ot-modal-footer-left">
+					<button type="button" class="ot-button secondary ot-bulk-edit-cancel-modal-dialog-button" onclick="DownloadPreferencesDialogView.setToDefault(event);"><ot-i18n>Set as default</ot-i18n>
+					<ot-i18n ot-as-title>Set as default</ot-i18n></button>
+				</div>
+				<div class="ot-modal-footer-right">
+					<button type="button" class="ot-button ot-button-save-continue" onclick="DownloadPreferencesDialogView.saveAndContinue(event);">
+						<ot-i18n>Continue</ot-i18n>
+					</button>
+					<span class="ot-button secondary" onclick="otui.DialogUtils.cancelDialog(this);">
+						<ot-i18n>Cancel</ot-i18n>
+					</span>
+				</div>
+			</div>
+		</ot-dialog-footer>
+</template>
+<script	src="../ui/import.js"></script>

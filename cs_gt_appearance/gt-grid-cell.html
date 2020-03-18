@@ -1,0 +1,335 @@
+<!-- link rel="stylesheet" type="text/css" href="./grid-cell.css"/>
+<script type="text/javascript" src="./grid-cell.js"></script-->
+
+<template-group id="grid-cell" ot-view="ResultsView" ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
+<template-group id="grid-cell" ot-view="WidgetFolderResultsView" ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
+<template-group id="grid-cell-phone" ot-view="MyTasksInspectorAssetsTabView" ot-properties='{}'>
+<template-group id="grid-cell" ot-view="WidgetSavedSearchView" ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
+<template-group id="grid-cell" ot-view="LinkPaneSourceAssetsView" ot-properties='{}'>
+<template-group id="grid-cell" ot-view="LinkPaneLinkedAssetsView" ot-properties='{}'>
+
+<template ot-template ot-view="ResultsView" id="grid-cell-master">
+	<host ot-platform="desktop" class="ot-result grid-cell" ot-resource-locator="light"
+			  oncontextmenu="!this.hasAttribute('ot-noselect') && otui.GalleryAssetActions.asContextMenu(event, this)"
+			  onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"
+			  onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+			  onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></host>
+	<host ot-platform="tablet,phone" class="ot-result grid-cell" ot-resource-locator="light"
+	      onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"
+	      onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+	      onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></host>
+	<!-- div style="border-bottom: #d9d9d9 solid 1px;"-->
+	<div class="grid-cell-content-area" selection-area>
+		<div>
+			<div style="position: absolute;top: 0;right: 0.5rem;">
+				<ot-metadata ot-fields="GTRUST.FIELD.WARNING MSG" style="width:100%;color:red;"></ot-metadata>
+			</div>
+		</div>
+		<content select="[cell-content]"></content>
+		<ot-point ot-platform="desktop" ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions"
+				  ot-appears-on="mouseenter:delegate(.grid-cell)"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+		<ot-point ot-platform="tablet,phone" ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions ot-hide-in-appworks" onviewresize="this.markNeedsResize()"></ot-point>
+		<span masonry-after-metadata ot-platform="phone" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+	</div>
+	<div class="ot-grid-cell-metadata">
+		<div class="ot-grid-cell-asset-name">
+			<content select="[asset-type]"></content>
+			<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+		</div>
+		<div class="ot-grid-cell-asset-status">
+			<ot-point ot-lookup="GalleryStatusIcons" class="grid-cell-status-icons"></ot-point>
+		</div>
+		<div class="ot-folder-path-div ot-hide-block" onclick="event.stopImmediatePropagation();">
+			<label class="ot-asset-name"><ot-i18n>Folder Path:<ot-i18n></label>
+			<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-folder-path" ot-fields="folderpath" ot-with-title></ot-metadata>
+		</div>
+		<div class="grid-cell-asset-metadata">
+			<master template="gallery-view-metadata"></master>
+		</div>
+	</div>
+	<div ot-platform="desktop" class="grid-cell-triangle">
+		<span class="results-view-selected"></span>
+	</div>
+	<span masonry-after-metadata ot-platform="tablet" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+</template>
+
+<template ot-template ot-view="ResultsView" id="phone-list-master">
+	<host class="ot-result grid-cell" ot-resource-locator="light"
+	      oncontextmenu="!this.hasAttribute('ot-noselect') && otui.GalleryAssetActions.asContextMenu(event, this)"
+	      onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"
+	      onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+	      onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);" selection-area></host>
+	<div class="phone-list-content-area">
+		<content select="[cell-content]"></content>
+		<span class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+	</div>
+	<div class="ot-grid-cell-metadata">
+		<div class="ot-grid-cell-asset-name">
+			<ot-metadata class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+		</div>
+		<div class="ot-grid-cell-asset-status">
+			<ot-point ot-lookup="GalleryStatusIcons" class="grid-cell-status-icons"></ot-point>
+		</div>
+		<div class="ot-folder-path-div ot-hide-block" onclick="event.stopImmediatePropagation();">
+			<label class="ot-asset-name"><ot-i18n>Folder Path:<ot-i18n></label>
+			<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-folder-path" ot-fields="folderpath" ot-with-title></ot-metadata>
+		</div>
+	</div>
+	<ot-point ot-platform="tablet,phone" ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions ot-hide-in-appworks" onviewresize="this.markNeedsResize()"></ot-point>
+</template>
+	
+<template ot-template ot-view="ResultsView" id="grid-cell-widget-master">
+	<host class="ot-result grid-cell" ot-resource-locator="light" selection-area
+			  onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"></host>
+	<div class="grid-cell-content-area">
+		<content select="[cell-content]"></content>
+	</div>
+	<div class="grid-cell-metadata-area">
+		<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+	</div>
+</template>
+
+<template ot-template ot-view="ResultsView" id="grid-cell-job-task-inspector-master">
+	<host class="ot-result grid-cell" ot-resource-locator="light" selection-area
+		  onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"></host>
+	<div class="grid-cell-content-area">
+		<content select="[cell-content]"></content>
+	</div>
+	<div class="grid-cell-metadata-area">
+		<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+	</div>
+</template>
+
+<template ot-template ot-view="ResultsView" id="grid-cell-link-master">
+	<host class="ot-result grid-cell" ot-resource-locator="light" selection-area></host>
+	<div class="grid-cell-content-area">
+		<content select="[cell-content]"></content>
+	</div>
+	<div class="grid-cell-metadata-area">
+		<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+	</div>
+	<mixin>
+		<span class="ot-link-pane-remove-background" onclick="LinkPaneView.onRemoveAsset(event);">
+			<ot-i18n ot-as-title>Remove</ot-i18n>
+			<span class="ot-link-pane-remove-icon"></span>
+		</span>
+	</mixin>
+</template>
+	
+<template ot-template ot-view="LightboxView" id="grid-cell-master">
+	<master template="grid-cell-master" ot-view="ResultsView">
+		<mixin>
+			<span class="lightbox-remove-background" onclick="$(this).addClass('ot-no-events'); LightboxViewActions.removeAsset(event);">
+				<ot-i18n ot-as-title>Remove from lightbox</ot-i18n>
+				<span class="lightbox-remove-icon"></span>
+			</span>
+		</mixin>
+	</master>
+</template>
+	
+<template ot-template ot-view="VersionView" id="gallery-view-metadata">
+	<div class="ot-version-grid-metadata">
+		<div>
+			<ot-i18n class="ot-metadata-label">Version</ot-i18n>
+			<ot-metadata ot-fields="version"></ot-metadata>
+		</div>
+		<div class="ot-load-indicator ot-hide">
+				<div class="icon"></div>
+			</div>
+		<div>
+			<ot-i18n class="ot-metadata-label">Date Imported</ot-i18n>
+			<ot-metadata ot-fields="date_imported" data-type="date"></ot-metadata>
+		</div>
+	</div>
+	<master template="gallery-view-metadata" ot-view="ResultsView"></master>
+</template>
+
+<template ot-template ot-view="ResultsView" id="grid-cell-status">
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-status">
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+		<content-area asset-type>
+			<ot-metadata ot-fields="GTRUST.FIELD.WARNING MSG" style="float:center;color:red;"></ot-metadata>
+		</content-area>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="ResultsView" id="grid-cell#default">
+	<ot-resource ot-platform="desktop" template="grid-cell-master" ot-onSpecialSelect='{"click":"SelectionManager.handleAssetSelection", "dblclick" : "route:open-contents(resourceID,resourceType)"}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+		<content-area asset-type>
+			<ot-metadata ot-as-image ot-fields="ot-resource-type-icon" class="ot-asset-type">
+				<ot-metadata ot-as-attribute ot-value-as-title ot-fields="ot-resource-type-display" class="ot-asset-type-mask"></ot-metadata>
+			</ot-metadata>
+		</content-area>
+	</ot-resource>
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-master" ot-onselect="route:open-contents(resourceID,resourceType)">
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+		<content-area asset-type>
+			<ot-metadata ot-as-image ot-fields="ot-resource-type-icon" class="ot-asset-type">
+				<ot-metadata ot-as-attribute ot-value-as-title ot-fields="ot-resource-type-display" class="ot-asset-type-mask"></ot-metadata>
+			</ot-metadata>
+		</content-area>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="MyJobsInspectorAssetsTabView" id="grid-cell-master">
+	<host class="ot-result grid-cell" ot-resource-locator="light" selection-area
+			  onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"
+              oncontextmenu="!this.hasAttribute('ot-noselect') && otui.JobsAssetActions.asContextMenu(event, this)"
+			  onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+			  onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></host>
+	<div class="grid-cell-content-area">
+		<content select="[cell-content]"></content>
+		<ot-point ot-platform="desktop" ot-lookup="JobsAssetActions" class="gallery-view-asset-actions"
+				  ot-appears-on="mouseenter:delegate(.grid-cell)"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+		<ot-point ot-platform="tablet,phone" ot-lookup="JobsAssetActions" class="gallery-view-asset-actions" onviewresize="this.markNeedsResize()"></ot-point>
+		
+	</div>
+	<div class="ot-grid-cell-metadata">
+		<div class="ot-grid-cell-asset-name">	
+			<content select="[asset-type]"></content>
+			<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+		</div>
+		<div class="grid-cell-asset-metadata">
+			<master template="gallery-view-metadata"></master>
+		</div>
+		<ot-point ot-lookup="GalleryStatusIcons" class="grid-cell-status-icons"></ot-point>
+	</div>
+	<div ot-platform="desktop" class="grid-cell-triangle" onclick="SelectionManager.handleAssetSelection(event)">
+		<span class="results-view-selected"></span>
+	</div>
+	<span masonry-after-metadata ot-platform="tablet,phone" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+</template>
+
+<template ot-template ot-view="MyTasksInspectorAssetsTabView" id="grid-cell-master">
+	<host class="ot-result grid-cell" ot-resource-locator="light" selection-area
+			  onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"
+              oncontextmenu="!this.hasAttribute('ot-noselect') && otui.JobsAssetActions.asContextMenu(event, this)"
+			  onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+			  onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></host>
+	<div class="grid-cell-content-area">
+		<content select="[cell-content]"></content>
+		<ot-point ot-platform="desktop" ot-lookup="JobsAssetActions" class="gallery-view-asset-actions"
+				  ot-appears-on="mouseenter:delegate(.grid-cell)"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+		<ot-point ot-platform="tablet,phone" ot-lookup="JobsAssetActions" class="gallery-view-asset-actions" onviewresize="this.markNeedsResize()"></ot-point>
+		
+	</div>
+	<div class="ot-grid-cell-metadata">
+		<div class="ot-grid-cell-asset-name">
+			<content select="[asset-type]"></content>
+			<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+		</div>
+		<div class="grid-cell-asset-metadata">
+			<master template="gallery-view-metadata"></master>
+		</div>
+		<ot-point ot-lookup="GalleryStatusIcons" class="grid-cell-status-icons"></ot-point>
+	</div>
+	<div ot-platform="desktop" class="grid-cell-triangle" onclick="SelectionManager.handleAssetSelection(event)">
+		<span class="results-view-selected"></span>
+	</div>
+	<span masonry-after-metadata ot-platform="tablet,phone" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+</template>
+
+	
+<template ot-template ot-view="WidgetFolderResultsView" id="grid-cell#default">
+	<ot-resource ot-platform="desktop" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"", "dblclick" : "route:open-contents(resourceID,resourceType)"}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+	
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"route:open-contents(resourceID,resourceType)", "dblclick" : ""}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="MyTasksInspectorAssetsTabView" id="grid-cell-phone">
+	<ot-resource template="grid-cell-job-task-inspector-master" ot-onselect="route:open-contents(resourceID,resourceType)">
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="LinkPaneSourceAssetsView" id="grid-cell">
+	<ot-resource template="grid-cell-link-master">
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="LinkPaneLinkedAssetsView" id="grid-cell">
+	<ot-resource template="grid-cell-link-master">
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="WidgetSavedSearchView" id="grid-cell#default">
+	<ot-resource ot-platform="desktop" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"", "dblclick" : "route:open-contents(resourceID,resourceType)"}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+	
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"route:open-contents(resourceID,resourceType)", "dblclick" : ""}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="ResultsView" id="grid-cell#folder">
+	<ot-resource ot-platform="desktop" template="grid-cell-master" ot-onSpecialSelect='{"click":"SelectionManager.handleAssetSelection", "dblclick" : "route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID()"}' >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+		<content-area asset-type>
+			<span class="ot-asset-type-folder" title="Folder"></span>
+		</content-area>
+	</ot-resource>
+	<ot-resource ot-platform="tablet" template="grid-cell-master" ot-onselect="route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID())" >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+		<content-area asset-type>
+			<span class="ot-asset-type-folder" title="Folder"></span>
+		</content-area>
+	</ot-resource>
+	<ot-resource ot-platform="phone" template="phone-list-master" ot-onselect="route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID())" >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+		<content-area asset-type>
+			<span class="ot-asset-type-folder" title="Folder"></span>
+		</content-area>
+	</ot-resource>
+</template>
+	
+<template ot-template ot-view="WidgetFolderResultsView" id="grid-cell#folder">
+	<ot-resource ot-platform="desktop" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"", "dblclick" : "route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID()"}' >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+	</ot-resource>
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID()", "dblclick" : ""}' >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+	</ot-resource>
+</template>
+	
+<template ot-template ot-view="WidgetSavedSearchView" id="grid-cell#folder">
+	<ot-resource ot-platform="desktop" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"", "dblclick" : "route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID()"}' >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+	</ot-resource>
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-widget-master" ot-onSpecialSelect='{"click":"route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID()", "dblclick" : ""}' >
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+	</ot-resource>
+</template>
+	
+<template ot-template ot-view="ResultsView" id="grid-cell#keyframe">
+	<ot-resource ot-platform="desktop" template="grid-cell-master" ot-nocheck ot-onSpecialSelect='{"click":"SBView.keyframeJump", "dblclick":""}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+		<content-area asset-type>
+			<ot-metadata ot-fields="ot-resource-type-display"></ot-metadata>
+		</content-area>
+	</ot-resource>
+	<ot-resource ot-platform="tablet,phone" template="grid-cell-master" ot-nocheck ot-onSpecialSelect='{"click":"SBView.keyframeJump", "dblclick":""}'>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+		<content-area asset-type>
+			<ot-metadata ot-fields="ot-resource-type-display"></ot-metadata>
+		</content-area>
+	</ot-resource>
+</template>
+
+<script>otui.Templates.load()</script>

@@ -1,0 +1,66 @@
+<!-- link rel="import" href="../app/inspector/inspector.html" />
+<link rel="import" href="../app/inspector/reportViewer.html" /-->
+
+<!-- <script src="./view/inspectorView/InspectorAssetActions.js" type="text/javascript"></script>
+<script src="./view/inspectorView/InspectorViewEditActions.js" type="text/javascript"></script>
+<script src="./mediaedit/ImageEdit.js" type="text/javascript"></script>
+<script src="./mediaedit/FabricImageEdit.js" type="text/javascript"></script>
+<script src="./view/inspectorView/ImageEditActions.js" type="text/javascript"></script>
+<script src="./view/inspectorView/VersionViewActions.js" type="text/javascript"></script>
+<script src="./view/inspectorView/ClipsViewActions.js" type="text/javascript"></script>
+<script src="./view/inspectorView/RelationshipViewActions.js" type="text/javascript"></script>
+<script src="./view/inspectorView/RelatedFoldersViewActions.js" type="text/javascript"></script>
+<script src="./view/inspectorView/InspectorStatusIcons.js" type="text/javascript"></script>
+
+<script src="./model/manager/AssetRelationshipManager.js" type="text/javascript"></script>
+<script src="./model/manager/AssetRelatedFoldersManager.js" type="text/javascript"></script>
+<script src="./model/manager/AssetVersionManager.js" type="text/javascript"></script>
+<script src="./model/manager/ClipManager.js" type="text/javascript"></script>
+<script src="./model/manager/StoryBoardManager.js" type="text/javascript"></script>
+ -->
+<template ot-template ot-view="InspectorView" id="content-master">
+	<ot-resource class="ot-inspectorview" ot-resource-locator="verbose" ot-display-override='{"cascade" : "table", "tabularCascade" : "table"}'>
+		<div class="ot-inspectorview-header" ot-platform="desktop,tablet">
+			<content select="[header-icon]"></content>
+			<div class="ot-inspectorview-header-content">
+				<div>
+					<ot-metadata ot-fields="name" class="ot-inspectorview-asset-title" ot-view-title="true" ot-metadata-large ot-platform="desktop,tablet"></ot-metadata>
+					<ot-metadata ot-fields="GTRUST.FIELD.WARNING MSG" class="ot-inspectorview-asset-title" ot-view-title="true" ot-metadata-large="" style="color:red;"></ot-metadata><ot-metadata ot-fields="xx" ></ot-metadata><ot-metadata ot-fields="xx" ></ot-metadata>
+					<master template="desktop-controls" ot-platform="desktop"></master>
+				</div>
+				<div>
+					<ot-point ot-lookup="InspectorStatusIcons"></ot-point>
+					<content select="[actions]"></content>
+				</div>
+
+				<div class="ot-hightail-logout-div">
+					<div class="ot-hightail-login-button">
+						<span id="ot-signInToHightailButton" class="ot-button secondary" onclick="HightailManager.signInToHightail(event)" style="display: none">
+							  <ot-i18n>Sign in to Hightail</ot-i18n>
+					   	</span>
+					</div>
+
+					<div class="ot-hightail-logout-button">
+						<span id="ot-signOutFromHightailButton" class="ot-button secondary" onclick="InspectorView.signOutFromHightail(event)" style="display: none">
+							  <ot-i18n>Sign out from Hightail</ot-i18n>
+					   	</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="image-edit-close"><span class="image-edit-close-action" onclick="InspectorView.closeEditPreview(event);"><ot-i18n ot-as-title>Close</ot-i18n></span></div>
+		<ot-tabs clear-tabs content-area=".ot-inspectorview-tabcontent"></ot-tabs>
+		<div class="ot-inspectorview-content">
+			<div class="ot-inspectorview-tabcontent"></div>
+		</div>
+		<master template="tablet-header-content" ot-platform="tablet,phone"></master>
+	</ot-resource>
+</template>
+
+<template ot-template ot-view="SecurityView" id="edit-content">
+	<div class="ot-inspector-security-details">
+		<ot-security-policy ot-mode="edit" ot-security-policy-view="ALL" asset-inspector></ot-security-policy>
+	</div>
+</template>
+
+<script>otui.Templates.load()</script>

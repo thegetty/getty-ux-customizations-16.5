@@ -1,0 +1,168 @@
+<template-group id="masonry-cell" ot-view="ResultsView" ot-properties='{"with-masonry" : true, "with-autocolumns" : true}'>
+	<template ot-template id="masonry-cell-master" ot-view="ResultsView">
+		<host class="ot-result masonry-cell" ot-resource-locator="light"
+			  oncontextmenu="!this.hasAttribute('ot-noselect') && otui.GalleryAssetActions.asContextMenu(event, this)"
+			  onclick="if(SelectionManager.mobileSelectionMode) event.stopPropagation();"
+			  onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+			  onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></host>
+	    <div class="masonry-cell-inner" >
+	    	<div>
+				<ot-metadata ot-fields="GTRUST.FIELD.WARNING MSG" style="width:95%;color:red;text-align:right;padding:0.25rem 0.5rem;"></ot-metadata>
+			</div>
+	    	<div class="masonry-cell-content-area" selection-area>
+				<content select="[ot-cell-content]"></content>
+				<content select="[masonry-content-area]"></content>
+			</div>
+			<content select="[ot-cell-metadata]"></content>
+			<content select="[masonry-after-metadata]"></content>
+			<div id="ot-metadata-holder" onclick="event.stopImmediatePropagation();" class="ot-metadata-holder">
+				<div class="ot-metadata-divider"></div>
+				<master template="gallery-view-metadata"></master>
+			</div>
+	</template>
+	<template id="masonry-cell-base" ot-template ot-view="ResultsView">
+		<master template="masonry-cell-master">
+			<ot-point ot-platform="desktop" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					ot-appears-on="mouseenter:delegate(.masonry-cell-inner)"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+			<ot-point ot-platform="tablet" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					onviewresize="this.markNeedsResize()"></ot-point>
+			<div class="ot-masonry-cell-asset-status">
+				<ot-point masonry-after-metadata id="masonryStatusIcons" ot-lookup="GalleryStatusIcons" class="masonry-cell-content-area-status"></ot-point>
+			</div>
+			<div masonry-after-metadata ot-platform="desktop" class="grid-cell-check-area" onclick="SelectionManager.handleAssetSelection(event)">
+				<span class="results-view-selected"></span> 
+			</div>
+			<span masonry-after-metadata ot-platform="tablet" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+		</master>
+	</template>
+	<template id="masonry-cell-base" ot-template ot-view="LightboxView">
+		<master template="masonry-cell-master">
+			<ot-point ot-platform="desktop" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					ot-appears-on="mouseenter:delegate(.masonry-cell-inner)"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+			<ot-point ot-platform="tablet" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					onviewresize="this.markNeedsResize()"></ot-point>
+					<div class="ot-masonry-cell-asset-statuss">
+			<ot-point masonry-after-metadata id="masonryStatusIcons" ot-lookup="GalleryStatusIcons" class="masonry-cell-content-area-status"></ot-point>
+			</div>
+			<span masonry-after-metadata class="lightbox-remove-background" onclick="$(this).addClass('ot-no-events'); LightboxViewActions.removeAsset(event);">
+				<ot-i18n ot-as-title>Remove from lightbox</ot-i18n>
+				<span class="lightbox-remove-icon"></span>
+			</span>
+			<div masonry-after-metadata ot-platform="desktop" class="grid-cell-check-area" onclick="SelectionManager.handleAssetSelection(event)">
+				<span class="results-view-selected"></span> 
+			</div>
+			<span masonry-after-metadata ot-platform="tablet" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+		</master>
+		</div>
+	</template>
+	<template id="masonry-cell-base" ot-template ot-view="WorkflowAssetsView">
+		<master template="masonry-cell-master">
+			<ot-point ot-platform="desktop" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					ot-appears-on="mouseenter:delegate(.masonry-cell-inner)"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+			<ot-point ot-platform="tablet" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					onviewresize="this.markNeedsResize()"></ot-point>
+					<div class="ot-masonry-cell-asset-statusss">
+			<ot-point masonry-after-metadata id="masonryStatusIcons" ot-lookup="GalleryStatusIcons" class="masonry-cell-content-area-status"></ot-point>
+			</div>
+			<div masonry-after-metadata ot-platform="desktop" class="grid-cell-check-area" onclick="SelectionManager.handleAssetSelection(event)">
+				<span class="results-view-selected"></span> 
+			</div>
+			<span masonry-after-metadata ot-platform="tablet" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+		</master>
+	</template>
+	<template id="masonry-cell-base" ot-template ot-view="MyJobsInspectorAssetsTabView">
+		<master template="masonry-cell-master">
+			<ot-point ot-platform="desktop" masonry-content-area ot-lookup="JobsAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					  ot-appears-on="mouseenter:delegate(.masonry-cell-inner)"
+					  onviewresize="this.markNeedsResize()"
+					  onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+					  onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+			<ot-point ot-platform="tablet" masonry-content-area ot-lookup="JobsAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					  onviewresize="this.markNeedsResize()"></ot-point>
+					  <div class="ot-masonry-cell-asset-statussss">
+			<ot-point masonry-after-metadata id="masonryStatusIcons" ot-lookup="GalleryStatusIcons" class="masonry-cell-content-area-status"></ot-point>
+			</div>
+			<div masonry-after-metadata ot-platform="desktop" class="grid-cell-check-area" onclick="SelectionManager.handleAssetSelection(event)">
+				<span class="results-view-selected"></span>
+			</div>
+			<span masonry-after-metadata ot-platform="tablet" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+		</master>
+	</template>
+	<template id="masonry-cell-base" ot-template ot-view="MyTasksInspectorAssetsTabView">
+		<master template="masonry-cell-master">
+			<ot-point ot-platform="desktop" masonry-content-area ot-lookup="JobsAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					  ot-appears-on="mouseenter:delegate(.masonry-cell-inner)"
+					  onviewresize="this.markNeedsResize()"
+					  onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+					  onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+			<ot-point ot-platform="tablet" masonry-content-area ot-lookup="JobsAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					  onviewresize="this.markNeedsResize()"></ot-point>
+					  <div class="ot-masonry-cell-asset-statusssss">
+			<ot-point masonry-after-metadata id="masonryStatusIcons" ot-lookup="GalleryStatusIcons" class="masonry-cell-content-area-status"></ot-point>
+			</div>
+			<div masonry-after-metadata ot-platform="desktop" class="grid-cell-check-area" onclick="SelectionManager.handleAssetSelection(event)">
+				<span class="results-view-selected"></span>
+			</div>
+			<span masonry-after-metadata ot-platform="tablet" class="results-view-selected grid-cell-selector" onclick="SelectionManager.handleAssetSelection(event)"></span>
+		</master>
+	</template>
+	<template id="masonry-cell-base" ot-template ot-view="TaskAssetsView">
+		<master template="masonry-cell-master">
+		</master>
+	</template>
+	<template id="masonry-cell#default" ot-template ot-view="ResultsView">
+		<ot-resource template="masonry-cell-base" ot-platform="tablet" ot-onselect="route:open-contents(resourceID,resourceType)">
+			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+			<div ot-cell-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-type-wrapper">
+				<ot-metadata ot-as-image ot-fields="ot-resource-type-icon" class="ot-asset-type">
+					<ot-metadata ot-as-attribute ot-value-as-title ot-fields="ot-resource-type-display" class="ot-asset-type-mask"></ot-metadata>
+				</ot-metadata>
+				<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+			</div>
+		</ot-resource>
+		<ot-resource template="masonry-cell-base" ot-platform="desktop" ot-onSpecialSelect='{"click":"SelectionManager.handleAssetSelection", "dblclick" : "route:open-contents(resourceID,resourceType)"}'>
+			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+			<div ot-cell-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-type-wrapper">
+				<ot-metadata ot-as-image ot-fields="ot-resource-type-icon" class="ot-asset-type">
+					<ot-metadata ot-as-attribute ot-value-as-title ot-fields="ot-resource-type-display" class="ot-asset-type-mask"></ot-metadata>
+				</ot-metadata>
+				<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name" ot-fields="name" ot-with-title></ot-metadata>
+			</div>
+		</ot-resource>
+	</template>
+	<template id="masonry-cell#folder" ot-template ot-view="ResultsView">
+		<ot-resource template="masonry-cell-base" ot-platform="tablet" ot-onselect="route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID())">
+			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+			<div ot-cell-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-type-wrapper"><span class="ot-asset-type-folder" title ="Folder"></span>
+				<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name ot-asset-folder-name" ot-fields="name" ot-with-title></ot-metadata>
+			</div>
+		</ot-resource>
+		<ot-resource template="masonry-cell-base" ot-platform="desktop" ot-onSpecialSelect='{"click":"SelectionManager.handleAssetSelection", "dblclick" : "route:open-folder(nodeID=resourceid,currentAccordion=generateCurrentAccordion(),breadcrumb=generateBreadcrumb(),pageProperties=generatePageProperties(),appliedFacets=generateDefaultFacets(),searchConfigID=generateDefaultSearchConfigID(),searchScopeID=generateDefaultSearchScopeID()"}'>
+			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"img" : "style/img/contenttype/folder148.svg", "width" : 256, "height" : 256}'></ot-rendition>
+			<div ot-cell-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-type-wrapper"><span class="ot-asset-type-folder" title ="Folder"></span>
+				<ot-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-name ot-asset-folder-name" ot-fields="name" ot-with-title></ot-metadata>
+			</div>
+		</ot-resource>
+	</template>
+	<template id="masonry-cell#keyframe" ot-template ot-view="ResultsView">
+		<ot-resource template="masonry-cell-master">
+			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+			<div ot-cell-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-type-wrapper"><ot-metadata ot-fields="ot-resource-type-display"></ot-metadata></div>
+			<ot-point ot-platform="desktop" masonry-content-area ot-lookup="GalleryAssetActions" class="gallery-view-asset-actions masonry-cell-content-area-actions"
+					onviewresize="this.markNeedsResize()"
+					onmenushow="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', true);"
+					onmenuhide="if(otui.is(otui.modes.DESKTOP)) ResultsView.setCellClass(this, 'fixed', false);"></ot-point>
+		</ot-resource>
+	</template>
+</template-group>
+
+<script>otui.Templates.load()</script>

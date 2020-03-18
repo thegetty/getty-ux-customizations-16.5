@@ -1,0 +1,80 @@
+<template id="NewFolderDialogView_content" ot-template ot-view="NewFolderDialogView">
+    <div>
+        <ot-dialog-header ot-platform="tablet">
+            <div class="ot-modal-dialog-header-buttons">
+				<span class="ot-button ot-upload-modal-dialog-button" onclick="NewFolderDialogView.onCreate(event)">
+					<ot-i18n>Create</ot-i18n>
+				</span>
+ 				<span class="ot-button secondary ot-upload-cancel-modal-dialog-button"
+                      onclick="otui.DialogUtils.cancelDialog(this);">
+					<ot-i18n>Cancel</ot-i18n>
+				</span>
+            </div>
+        </ot-dialog-header>
+        <ot-dialog-body>
+            <ot-tabs></ot-tabs>
+        </ot-dialog-body>
+        <ot-dialog-footer ot-platform="desktop">
+            <div class="ot-modal-dialog-footer-buttons">
+                <button id="ot-newfolder-create-button" type="submit" class="ot-button ot-upload-modal-dialog-button"
+                        onclick="NewFolderDialogView.onCreate(event)">
+                    <ot-i18n>Create</ot-i18n>
+                </button>
+                <button type="button" class="ot-button secondary" onclick="otui.DialogUtils.cancelDialog(this)">
+                    <ot-i18n>Cancel</ot-i18n>
+                </button>
+            </div>
+        </ot-dialog-footer>
+    </div>
+</template>
+
+<template id="NewFolderView_content" ot-template ot-view="NewFolderView">
+    <div class="ot-new-folder-tabs-wrapper">
+        <div class="ot-newfolder-group">
+            <ot-i18n class="ot-newfolder-header">Current folder</ot-i18n>
+            <ot-view-prop ot-property="newFolderBreadcrumb" ot-parser="parseBreadcrumbNotClickable"></ot-view-prop>
+        </div>
+        <div class="ot-newfolder-group">
+            <div class="ot-newfolder-header">
+                <ot-i18n>Folder name</ot-i18n>
+                <span class="ot-foldername-mandatory-field">*</span>
+            </div>
+            <div class="ot-newfolder-input-wrapper">
+                <input id="ot-newfolder-name" tabindex="0" autofocus class="ot-text-input ot-newfolder-form-element"></input>
+
+                <div class="ot-error-msg"></div>
+            </div>
+        </div>
+        <div class="ot-newfolder-group">
+            <ot-i18n class="ot-newfolder-header">Type</ot-i18n>
+            <input id="newFolderTypesTextBox" tabindex="0" autofocus class="ot-text-input ot-newfolder-form-element" readonly></input>
+           
+            <ot-select id="newFolderTypes"  tabindex="0" name="types" class="ot-newfolder-form-element"
+                                                               onchange="NewFolderView.folderTypesChanged(event)"></ot-select>
+            <ot-i18n class="ot-newfolder-preview-title">Preview</ot-i18n>
+            <div><span class="ot-newfolder-preview-description"></span><img class="ot-newfolder-preview-image"/></div>
+        </div>
+    </div>
+</template>
+
+<template id="NewFolderDialog" ot-template>
+    <ot-view ot-freeflow ot-view-type="NewFolderDialogView"
+             ot-view-props='{"name" : "newfolder", "type" : "newfolder"}'>
+    </ot-view>
+</template>
+
+<template id="NewFolderSecPolicyView_content" ot-template ot-view="NewFolderSecPolicyView">
+    <ot-resource class="ot-new-folder-security">
+        <ot-security-policy ot-mode="create"/>
+    </ot-resource>
+</template>
+
+<template id="NewFolderMetaDataView_content" ot-template ot-view="NewFolderMetaDataView">
+    <ot-resource class="ot-new-folder-metadata" ot-resource-locator="verbose" ot-edit-mode="edit">
+        <ot-model ot-display-editable="true" ot-group-template="ot-flat-metadata-group-template"
+                  ot-section-template="ot-metadata-folder-section-message">
+        </ot-model>
+    </ot-resource>
+</template>
+
+<script src="../ui/import.js"></script>

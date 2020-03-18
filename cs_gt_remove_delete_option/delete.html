@@ -1,0 +1,77 @@
+<template id="DeleteDialog" ot-template>
+	<ot-view ot-freeflow ot-view-type="DeleteView"
+		ot-view-props='{"name" : "Delete", "type" : "delete"}'>
+	</ot-view>
+</template>
+
+<template id="DeleteView_content" ot-template ot-view="DeleteView">
+	<div>
+	<ot-dialog-header ot-platform="tablet">
+		<div class="ot-modal-dialog-header-buttons">
+			<span class="ot-button secondary" onclick="DeleteView.setDefaults(event);">
+					<ot-i18n>Set as defaults</ot-i18n>
+			</span>
+			<span class="ot-button" onclick="DeleteView.executeDelete(event);">
+					<ot-i18n>Delete</ot-i18n>
+			</span>
+		</div>
+		<div class="ot-cancel">
+ 				<span class="ot-button secondary" onclick="otui.DialogUtils.cancelDialog(this);">
+					<ot-i18n>Cancel</ot-i18n>
+				</span>
+		</div>
+	</ot-dialog-header>
+		
+	<ot-dialog-body>
+		<div class="ot-delete-message">
+				<span class="ot-delete-message-icon"></span><span id="ot-delete-message" class="ot-delete-message-text"></span>
+		</div>
+		<div class="ot-delete-content">
+			<div id="ot-asset-delete-options" class="ot-delete-group">
+				<ot-i18n class="ot-delete-header">Asset Options</ot-i18n>
+				<ot-i18n class="ot-delete-subheader">Assets will be marked for deletion in all locations.</ot-i18n>
+				<div class="ot-delete-form-element">
+					<input id="ot-delete-versions-box" disabled type="checkbox" class="ot-checkbox" onclick=""/>
+			    	<label for="ot-delete-versions-box"><ot-i18n>Also delete all versions</ot-i18n></label>
+			    </div>
+			    <div class="ot-delete-form-element">
+			    	<input id="ot-delete-content-box" disabled type="checkbox" class="ot-checkbox" onclick=""/>
+			    	<label for="ot-delete-content-box"><ot-i18n>Only delete content (leave all metadata intact)</ot-i18n></label>
+			    </div>
+			</div>
+			
+			<div id="ot-folder-delete-options" class="ot-delete-group">
+				<ot-i18n class="ot-delete-header">Folder Options</ot-i18n>
+				<ot-i18n class="ot-delete-subheader">Folders will be marked for deletion in all locations.</ot-i18n>
+				<div class="ot-delete-form-element" style="opacity: 0.4;filter: alpha(opacity=40)">
+					<input id="ot-delete-subfolders-box" type="checkbox" class="ot-checkbox" onclick="DeleteView.updateFolderNote(event)" disabled="disabled"/>
+			    	<label for="ot-delete-subfolders-box"><ot-i18n>Also delete subfolders</ot-i18n></label>
+			    </div>
+			    <div class="ot-delete-form-element" style="opacity: 0.4;filter: alpha(opacity=40)">
+			    	<input id="ot-delete-assets-box" type="checkbox" class="ot-checkbox" onclick="DeleteView.updateFolderNote(event)" disabled="disabled"/>
+			    	<label for="ot-delete-assets-box"><ot-i18n>Also delete contained assets</ot-i18n></label>
+			    </div>
+			</div>
+			
+			<div class="ot-delete-group">
+				<ot-i18n class="ot-delete-header">Note</ot-i18n>
+				<ot-i18n class="ot-delete-subheader">- Items marked for deletion will be purged from the system at a later time.</ot-i18n>
+				<span id="ot-folder-delete-note"><ot-i18n class="ot-delete-subheader">- When folders are purged, items which do not exist elsewhere will be moved to the Orphans folder (will not be deleted).</ot-i18n></span>
+			</div>
+		</div>
+	</ot-dialog-body>
+	
+	<ot-dialog-footer ot-platform="desktop">
+		<ot-layout class="ot-delete-footer-layout">
+			<span class="ot-delete-footer-holder-left">
+				<button type="button" class="ot-button secondary" onclick="DeleteView.setDefaults(event)"><ot-i18n>Set as defaults</ot-i18n></button>
+			</span><div class="ot-modal-dialog-footer-buttons" ot-layout-fill-width>
+				<button id="ot-delete-button" type="submit" autofocus class="ot-button" onclick="DeleteView.executeDelete(event);"><ot-i18n>Delete</ot-i18n></button>
+				<button type="button" class="ot-button secondary" onclick="otui.DialogUtils.cancelDialog(this)"><ot-i18n>Cancel</ot-i18n></button>
+			</div>
+		</ot-layout>			
+	</ot-dialog-footer>
+	</div>
+</template>
+
+<script>otui.Templates.load()</script>

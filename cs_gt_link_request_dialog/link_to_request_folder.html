@@ -1,0 +1,37 @@
+<template id="LinkToRequestFolderDialog" ot-template> <ot-view
+	ot-freeflow ot-view-type="LinkToRequestFolderView"
+	ot-view-props='{"name" : "linktorequestfolder", "type" : "linktorequestfolder", "root" : "ROOT_FOLDERS", "title" : "Link to request folder"}'>
+</ot-view> </template>
+
+<template id="LinkToRequestFolderView_content" ot-template
+	ot-view="LinkToRequestFolderView">
+<div>
+	<ot-dialog-header ot-platform="tablet">
+	<div class="ot-modal-dialog-header-buttons"></div>
+	</ot-dialog-header>
+	<ot-dialog-body> <ot-layout
+		id="ot-linkrequestfolder-layout">
+	<div class="gt-linkdialog-body">
+		<div class="gt-linkdialog-row">
+			<ot-i18n>Please enter the Request ID for the folder that
+			you want to add these images to </ot-i18n>
+			<input id="assetRequestFolderIB" type="text" width=100 readonly="readonly"/>
+		</div>
+	</div>
+	</ot-layout> </ot-dialog-body>
+	<ot-dialog-footer ot-platform="desktop">
+	<div class="ot-modal-dialog-footer-buttons">
+		<span id="gt-linkrequestfolder-cancelButton"
+			class="ot-button secondary" tabindex="0">
+			<ot-i18n>Cancel</ot-i18n> <ot-i18n ot-as-title>Cancel action</ot-i18n>
+		</span> 
+		<span id="gt-linkrequestfolder-linkButton" class="ot-button"
+			tabindex="0" > <ot-i18n>Link</ot-i18n>
+			<ot-i18n ot-as-title>Link assets to request folder</ot-i18n>
+		</span>
+	</div>
+	</ot-dialog-footer>
+</div>
+</template>
+
+<script src="../ui/import.js"></script>

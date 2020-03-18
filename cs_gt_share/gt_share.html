@@ -1,0 +1,385 @@
+<template id="ShareDialog" ot-template>
+       <ot-view ot-freeflow ot-view-type="ShareView" ot-platform="desktop,tablet"
+              ot-view-props='{"name" : "shareAssets", "type" : "shareAssets"}'></ot-view>
+	<ot-view ot-freeflow ot-view-type="ShareView" ot-platform="phone" class="dialog-animate bottom"
+	         ot-view-props='{"name" : "shareAssets", "type" : "shareAssets"}'></ot-view>
+</template>
+
+<template id="ShareViewFormats_header" ot-template ot-view="ShareView">
+	<div name="type" style="width:calc(33% - 1.3rem)" sortable="true" class="ot-table-header-element"><ot-i18n>Asset Type</ot-i18n></div>
+	<div name="quantity" style="width:calc(33% - 1.3rem)" sortable="true" class="ot-table-header-element"><ot-i18n>Quantity</ot-i18n></div>
+	<div name="formats" style="width:calc(33% - 1.3rem)" sortable="true" class="ot-table-header-element"><ot-i18n>Formats</ot-i18n></div>
+</template>
+
+
+<template id="ShareView_content" ot-template ot-view="ShareView">
+        <ot-dialog-header ot-platform="tablet">
+       		  <div class="ot-modal-dialog-header-buttons">
+       		  					<span style="display: inline-block">
+
+                                   <span id="ot-share-finishButton" class="ot-button" onclick="ShareView.finish(event)">
+                                          <ot-i18n>Finish</ot-i18n>
+                                   </span>
+                                  </span>
+                                   <span id="ot-share-cancelButton" class="ot-button secondary" onclick="otui.DialogUtils.cancelDialog(this)">
+                                          <ot-i18n>Cancel</ot-i18n>
+                                   </span>
+                                    <span id="ot-share-closeButton" class="ot-button" onclick="ShareView.closeTerms(event)">
+                                          <ot-i18n>Close</ot-i18n>
+                                   </span>
+                     </div>
+       </ot-dialog-header>
+      <ot-dialog-body class="ot-share-view">
+
+		  <div id="shareOptionsPane" class="ot-share-options-pane" ot-platform="desktop">
+		  </div>
+
+		  <div class="slimScrollDivTablet" ot-platform="tablet">
+			  <div id="shareOptionsPane" class="ot-share-options-pane">
+			  </div>
+		  </div>
+
+		  <div id="shareOptionsPane" class="ot-share-options-pane-phone" ot-platform="phone">
+			  <ot-i18n class="ot-share-label" ot-replacements="selectedAssetsCount" ot-n="selectedAssetsCount">
+				  <singular>How do you want to share this asset?</singular>
+				  <plural>How do you want to share these assets?</plural>
+			  </ot-i18n>
+			  <ot-i18n class="ot-download-label" ot-replacements="selectedAssetsCount" ot-n="selectedAssetsCount">
+				  <singular>How do you want to download this asset?</singular>
+				  <plural>How do you want to download these assets?</plural>
+			  </ot-i18n>
+			  <ot-select id="shareOptions" class="ot-share-options" name="shareOptions" class="" onchange="ShareView.shareOptionsChanged(event)"></ot-select>
+		  </div>
+
+
+		  <div class="ot-share-main-area">
+			  <div class="ot-share-terms-tablet" id="ot-agree-terms" ot-platform="tablet">
+				  <input id="ot-agree-terms-box" type="checkbox" class="ot-checkbox" onclick="ShareView.termClicked(event)"/>
+				  <label for="ot-agree-terms-box"><ot-i18n class="ot-tac" ot-styled>I agree to the @terms and conditions@</ot-i18n></label>
+			  </div>
+			  <div class="ot-share-container">
+				  <div class="ot-share-container-wrapper">
+
+					  <div id="ot-share-deliveryOptions">
+
+						  <!--ot-i18n class="ot-share-label" ot-replacements="selectedAssetsCount" ot-n="selectedAssetsCount">
+							  <singular>How do you want to share this asset?</singular>
+							  <plural>How do you want to share these assets?</plural>
+						  </ot-i18n>
+						  <ot-select id="shareOptions" class="ot-share-options" name="shareOptions" class="" onchange="ShareView.shareOptionsChanged(event)"></ot-select-->
+
+						  <span id="ot-share-deliveryOptionsLabel" class="ot-share-heading" tabindex="0">
+						  </span>
+
+						  <div class="ot-share-1-indent-content">
+							  <div id="shareFtpOptions" class="ot-share-ftp-options">
+								  <div id="shareFtpSecure" class="ot-share-ftp-secure">
+									  <input id="ot-share-ftp-secure" type="checkbox"  class="ot-checkbox" onchange="ShareView.shareFtpSecureOptionChanged(event)">
+									  <label for="ot-share-ftp-secure"><ot-i18n>Send via secure FTP</ot-i18n></label>
+								  </div>
+
+								  <div id="shareFtpNotify" class="ot-share-ftp-notify">
+									  <input id="ot-share-ftp-notify" type="checkbox"  class="ot-checkbox" onchange="ShareView.shareFtpNotifyOptionChanged(event)">
+									  <label for="ot-share-ftp-notify"><ot-i18n>Send email notification</ot-i18n></label>
+								  </div>
+							  </div>
+
+							  <div id="shareEmailOptions" class="ot-share-email-options">
+								  <div id="shareEmailAssets" class="ot-share-email-assets">
+									  <input id="ot-share-email-assets" name="ot-share-email-options" type="radio" class="ot-radio" onchange="ShareView.shareEmailOptionsChanged(event)" checked>
+									  <label for="ot-share-email-assets" ><ot-i18n>Send files</ot-i18n></label>
+								  </div>
+								  <div id="shareEmailAssetUrl" class="ot-share-email-asset-url">
+									  <input id="ot-share-email-asset-url" name="ot-share-email-options" type="radio" class="ot-radio" onchange="ShareView.shareEmailOptionsChanged(event)">
+									  <label for="ot-share-email-asset-url" ><ot-i18n>Send link</ot-i18n></label>
+								  </div>
+							  </div>
+
+
+							  <div id="shareOptionFields" class="ot-delivery-fields"></div>
+
+
+						  </div>
+					  </div>
+					  <div id="ot-share-fileOptions" class="ot-share-fileOptions">
+
+						  <span id="ot-share-contentSettingsLabel" class="ot-share-heading" tabindex="0">
+								<ot-i18n>Content settings</ot-i18n>
+						  </span>
+						  <div class="ot-share-1-indent-content">
+							  <div class="ot-share-fileOptions-delivery-method">
+								  <ot-i18n class="ot-delivery-method-title">Asset formats</ot-i18n>
+								  <span id="ot-delivery-method" class="ot-delivery-method"></span>
+							  </div>
+
+							  <div id="ot-share-grouped-assets" class="ot-table-content">
+								  <div class="ot-table-header">
+									  <div class="ot-table-static ot-table-heading ot-table-header-asset-type"><ot-i18n>Asset type</ot-i18n></div>
+									  <div class="ot-table-static ot-table-heading ot-table-header-thumbnail"><ot-i18n>Thumbnail</ot-i18n></div>
+									  <div class="ot-table-static ot-table-heading ot-table-header-info"><ot-i18n>Info</ot-i18n></div>
+									  <div class="ot-table-static ot-table-heading ot-table-header-formats"><ot-i18n>Formats</ot-i18n></div>
+								  </div>
+								  <div id="ot-share-asset-types" class="ot-share-asset-list-body"></div>
+							  </div>
+						  </div>
+					  </div>
+
+					  <div id="ot-hightail-login-div">
+						  <master template="ot-hightail-login-template"></master>
+					  </div>
+
+					  <div class="ot-share-settings-button ot-share-1-indent-content">
+						  <span id="ot-share-settingsButton" tabindex="0" onclick="ShareView.showSettings(event)">
+								<ot-i18n>Advanced settings</ot-i18n><ot-i18n ot-as-title>Change advanced settings</ot-i18n>
+						  </span>
+						  <span id="settingsButtonArrow" class="ot-share-settingsButton-open-arrow" onclick="ShareView.showSettings(event)"></span>
+					  </div>
+					  <div id="ot-share-settings" class="ot-share-1-indent-content">
+						<div class="ot-share-contents">
+							<div class="ot-share-settings-block-contents">
+								<ot-i18n class="ot-share-settings-header">Contents of export</ot-i18n>
+								<div class="ot-share-radio-buttons">
+									<input id="ot-share-assets-and-metadata" name="ot-share-contents" type="radio" class="ot-radio" checked="checked" value="0" onchange="ShareView.shareContentsChanged(event)">
+									<label for="ot-share-assets-and-metadata" ><ot-i18n>Assets and metadata</ot-i18n></label>
+								</div>
+								<div class="ot-share-radio-buttons">
+									<input id="ot-share-assets-and-list" name="ot-share-contents" type="radio" class="ot-radio" value="1" onchange="ShareView.shareContentsChanged(event)">
+									<label for="ot-share-assets-and-list" ><ot-i18n>Assets and asset list</ot-i18n></label>
+								</div>
+								<div class="ot-share-radio-buttons">
+									<input id="ot-share-metadata-only" name="ot-share-contents" type="radio" class="ot-radio" value="2" onchange="ShareView.shareContentsChanged(event)">
+									<label for="ot-share-metadata-only" ><ot-i18n>Metadata only</ot-i18n></label>
+								</div>
+							</div>
+							<div class="ot-share-settings-block-packaging">
+								<ot-i18n class="ot-share-settings-header">Packaging</ot-i18n>
+								<ot-i18n class="ot-share-packaging-options">Apply the following packaging options:</ot-i18n>
+								<ot-select id="ot-share-packaging-options" class="ot-share-packaging-options" onchange="">
+								</ot-select>
+							</div>
+							<div class="ot-share-settings-block-compression">
+								<ot-i18n class="ot-share-settings-header">Compression</ot-i18n>
+								<div class="ot-share-compress-items"><input id="ot-share-compress-items" type="checkbox" checked="true" class="ot-checkbox" onchange="ShareView.onCompressionChange(event)"><label for="ot-share-compress-items"><ot-i18n class="ot-share-compression-filename">Compress the exported items into one file</ot-i18n></label></div>
+								<input id="ot-share-compress-items-filename" type=text value="Download" class="ot-text-input ot-share-compression"></input><span class="ot-share-compression-filetype">.zip</span>
+							</div>
+							<div class="ot-share-settings-block-metadataformat">
+								<ot-i18n class="ot-share-settings-header">Metadata format</ot-i18n>
+								<div class="ot-share-meatdata-radio-buttons">
+									<input id="ot-share-metadata-xml-format" name="ot-share-metadata-format" type="radio" class="ot-radio" checked="checked">
+									<label for="ot-share-metadata-xml-format" ><ot-i18n>XML</ot-i18n></label>
+								</div>
+								<div class="ot-share-meatdata-radio-buttons">
+									<input id="ot-share-metadata-csv-format" name="ot-share-metadata-format" type="radio" class="ot-radio">
+									<label for="ot-share-metadata-csv-format" ><ot-i18n>CSV</ot-i18n></label>
+								</div>
+							</div>
+							<div class="ot-share-setting-export-options">
+								<ot-i18n class="ot-share-settings-header">Export options</ot-i18n>
+								<div class="ot-share-preserve-export-hierarchy">
+									<input id="ot-share-preserve-export-hierarchy" type="checkbox"  class="ot-checkbox" onchange="">
+									<label for="ot-share-preserve-export-hierarchy"><ot-i18n>Preserve export hierarchy</ot-i18n></label>
+								</div>
+
+								<div class="ot-share-include-subfiles">
+									<input id="ot-share-include-subfiles" type="checkbox"  class="ot-checkbox" onchange="">
+									<label for="ot-share-include-subfiles"><ot-i18n>Include subfiles</ot-i18n></label>
+								</div>
+							</div>
+
+							<ot-i18n class="ot-share-settings-header">Linked assets</ot-i18n>
+							<div class="ot-share-include-linked"><input id="ot-share-include-linked-assets" type="checkbox"  class="ot-checkbox" onchange="ShareView.onIncludeLinked(event)"><label for="ot-share-include-linked-assets"><ot-i18n>Include linked assets</ot-i18n></label></div>
+							<div id="ot-share-linked-assets">
+								<div class="ot-share-link-depth"><ot-i18n class="ot-share-link-depth-label">Depth of linked assets</ot-i18n><ot-select id="ot-share-link-depth" class="ot-share-link-depth-select" onchange="">
+									<option id="ot-depth-0" value="0">All</option>
+									<option id="ot-depth-1" value="1">1</option>
+									<option id="ot-depth-2" value="2">2</option>
+									<option id="ot-depth-3" value="3">3</option>
+									<option id="ot-depth-4" value="4">4</option>
+									<option id="ot-depth-5" value="5">5</option>
+									<option id="ot-depth-6" value="6">6</option>
+									<option id="ot-depth-7" value="7">7</option>
+									<option id="ot-depth-8" value="8">8</option>
+									<option id="ot-depth-9" value="9">9</option>
+									<option id="ot-depth-10" value="10">10</option>
+									</ot-select>
+								</div>
+							</div>
+						</div>
+
+						 <span id="ot-share-defaultButton" class="ot-button secondary ot-share-defaultBtn" tabindex="0" onclick="ShareView.setDefaults(event)">
+							<ot-i18n>Set as defaults</ot-i18n><ot-i18n ot-as-title>Set default settings</ot-i18n>
+						 </span>
+					  </div>
+
+					  <div id="ot-agree-terms-page">
+						  <div class="ot-share-terms-textbox" template="legal-terms-and-conditions"></div>
+					  </div>
+
+
+					  <div class="ot-share-activity-name-div">
+						  <div class="ot-share-activity-name-label-div">
+							  <label><ot-i18n>Activity name</ot-i18n></label>
+						  </div>
+						  <div>
+							  <input class="ot-share-activity-name ot-text-input"></input>
+						  </div>
+					  </div>
+
+					  <div id="ot-hightail-confirmation-div">
+					  		<master template="ot-hightail-share-confirmation-template"></master>
+					  </div>
+
+					  <div id="ot-share-downloadOptions" class="ot-share-1-indent-content">
+						  <span class="ot-download-preference-options" template="DownloadPreferencesDialogView_downloadFormat_gt"></span>
+						  <span class="ot-download-preference-options" template="DownloadPreferencesDialogView_downloadOptions"></span>
+
+
+						  <div class="ot-download-format-options">
+							  <div class="ot-prepare-job-info" ot-platform="desktop,tablet">
+								  <ot-i18n>The files will need to be prepared for download. When they are ready, you can download them from My Activities.</ot-i18n>
+							  </div>
+							  <div class="ot-prepare-job-info" ot-platform="phone">
+								  <ot-i18n>The files will need to be prepared for download. When they are ready, you can download them from Downloads.</ot-i18n>
+							  </div>
+
+							  <div>
+							  		<input id="ot-download-email-notify" name="send_notification" type="checkbox" class="ot-checkbox ot-download-email-notify"/>
+							  		<label for="ot-download-email-notify"><ot-i18n>Send me an email notification when my files are ready to be downloaded</ot-i18n></label>
+							  </div>
+						  </div>
+
+						  <span id="ot-share-downloadDefaultButton" class="ot-button secondary ot-share-defaultBtn" tabindex="0" onclick="ShareView.setDefaultDownloadPref(event);">
+							<ot-i18n>Set as defaults</ot-i18n><ot-i18n ot-as-title>Set default download preferences</ot-i18n>
+						 </span>
+					  </div>
+				  </div>
+			  </div>
+			  <div class="ot-share-terms" id="ot-agree-terms" ot-platform="desktop">
+				  <input id="ot-agree-terms-box" type="checkbox" class="ot-checkbox" onclick="ShareView.termClicked(event)"/>
+				  <label for="ot-agree-terms-box"><ot-i18n class="ot-tac" ot-styled>I agree to the @terms and conditions@</ot-i18n></label>
+			  </div>
+			  <div class="ot-share-terms-phone" id="ot-agree-terms" ot-platform="phone">
+				  <input id="ot-agree-terms-box" type="checkbox" class="ot-checkbox" onclick="ShareView.termClicked(event)"/>
+				  <label for="ot-agree-terms-box"><ot-i18n class="ot-tac" ot-styled>I agree to the @terms and conditions@</ot-i18n></label>
+			  </div>
+		  </div>
+      </ot-dialog-body>
+       <ot-dialog-footer ot-platform="desktop,phone">
+                     <div class="ot-modal-dialog-footer-buttons">
+                                   <span id="ot-share-finishButton" class="ot-button" tabindex="0" onclick="ShareView.finish(event)">
+                                          <ot-i18n>Finish</ot-i18n><ot-i18n ot-as-title>Initiate asset sharing</ot-i18n>
+                                   </span>
+                                   <span id="ot-share-cancelButton" class="ot-button secondary" tabindex="0" onclick="otui.DialogUtils.cancelDialog(this)">
+                                          <ot-i18n>Cancel</ot-i18n><ot-i18n ot-as-title>Cancel asset sharing</ot-i18n>
+                                   </span>
+                                    <span id="ot-share-closeButton" class="ot-button" tabindex="0" onclick="ShareView.closeTerms(event)">
+                                          <ot-i18n>Close</ot-i18n><ot-i18n ot-as-title>Back to add formats</ot-i18n>
+                                   </span>
+                     </div>
+              </ot-dialog-footer>
+</template>
+
+<template ot-template id="legal-terms-and-conditions">
+	<ot-i18n>&lt;Placeholder for legal text. Put your terms and conditions here.&gt;</ot-i18n>
+</template>
+
+<template ot-template id="ot-share-group-row">
+	<div class="ot-share-group-row">
+		<div class="ot-share-group-paging"></div>
+		<div class="ot-table-element ot-share-group-info">
+			<img class="ot-share-preview-image">
+			<div class="ot-share-info">
+				<div class="ot-share-table-result-asset-type-with-arrow"></div>
+				<div class="ot-share-table-result-quantity"></div>
+			</div>
+			<span class="ot-share-group-row-prev" onclick="ShareView.pageGroups(event, -1)"></span>
+			<span class="ot-share-group-row-next" onclick="ShareView.pageGroups(event, 1)"></span>
+		</div>
+		<div class="ot-table-element ot-share-group-formatter">
+			<div class="ot-share-format-dropdown-wrapper">
+				<ot-select class="ot-share-format-dropdown"></ot-select>
+			</div>
+			<div class="ot-share-table-result-add-format">
+				<button onclick="ShareView.addFormat(event)" class="ot-button secondary"><ot-i18n class="ot-share-add-button-label">Add</ot-i18n></button>
+			</div>
+		</div>
+		<div class="ot-table-element ot-share-table-result-format">
+		</div>
+		<div class="ot-table-element ot-share-open-arrow" onclick="ShareView.showHideAssetRows(event)">
+			<span class=""></span>
+		</div>
+	</div>
+</template>
+
+<template ot-template id="ot-share-single-row">
+	<div class="ot-table-row-asset">
+		<div class="ot-share-group-assets-paging"></div>
+		<div class="ot-table-element ot-share-group-info">
+			<img class="ot-share-preview-image">
+			<div class="ot-share-info">
+				<div class="ot-share-table-result-asset-filename"></div>
+				<div class="ot-share-table-result-quantity"></div>
+			</div>
+			<span class="ot-share-group-row-prev" onclick="ShareView.pageGroupAssets(event, -1)"></span>
+			<span class="ot-share-group-row-next" onclick="ShareView.pageGroupAssets(event, 1)"></span>
+		</div>
+		<div class="ot-table-element ot-share-group-formatter">
+			<div class="ot-share-format-dropdown-wrapper">
+				<ot-select class="ot-share-format-dropdown"></ot-select>
+			</div>
+			<div class="ot-share-table-result-add-format">
+				<button onclick="ShareView.addFormat(event)" class="ot-button secondary"><ot-i18n class="ot-share-add-button-label">Add</ot-i18n></button>
+			</div>
+		</div>
+		<div class="ot-table-element ot-share-table-result-format">
+		</div>
+	</div>
+</template>
+
+<template ot-template id="ot-share-single-row-group">
+	<div class="ot-table-row-asset">
+		<div class="ot-share-group-paging"></div>
+		<div class="ot-table-element ot-share-group-info">
+			<img class="ot-share-preview-image">
+			<div class="ot-share-info">
+				<div class="ot-share-table-result-asset-filename"></div>
+				<div class="ot-share-table-result-quantity"></div>
+			</div>
+			<span class="ot-share-group-row-prev" onclick="ShareView.pageGroups(event, -1)"></span>
+			<span class="ot-share-group-row-next" onclick="ShareView.pageGroups(event, 1)"></span>
+		</div>
+		<div class="ot-table-element ot-share-group-formatter">
+			<div class="ot-share-format-dropdown-wrapper">
+				<ot-select class="ot-share-format-dropdown"></ot-select>
+			</div>
+			<div class="ot-share-table-result-add-format">
+				<button onclick="ShareView.addFormat(event)" class="ot-button secondary"><ot-i18n class="ot-share-add-button-label">Add</ot-i18n></button>
+			</div>
+		</div>
+		<div class="ot-table-element ot-share-table-result-format">
+		</div>
+	</div>
+</template>
+
+<template ot-template id="ot-selected-format-args">
+	<div class = "ot-selected-format-args-wrapper">
+	</div>
+</template>
+
+<template ot-template id="ot-selected-format-arg-entry">
+	<div class = "ot-selected-format-arg-entry">
+		<label class="ot-selected-format-arg-entry-label"></label>
+		<span>:</span>
+		<span class="ot-selected-format-arg-entry-value"></span>
+	</div>
+</template>
+
+<template ot-template id="ot-format-add-button">
+	<div class="ot-table-element ot-share-table-result-add-format">
+		<button onclick="ShareView.addFormat(event)" class="ot-button ot-share-option-button secondary">
+			<span class="ot-share-add-button-label">Add</span>
+		</button>
+	</div>
+</template>
+
+<script src="../ui/import.js"></script>
