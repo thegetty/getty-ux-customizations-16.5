@@ -13,7 +13,7 @@
 	 * 
 	 */
 	
-	DeleteView.updateFolderNote = function(event)
+	exports.DeleteView.updateFolderNote = function(event)
 	{
 		if (!deleteSubfoldersBox.checked || !deleteAssetsBox.checked)
 		{
@@ -25,43 +25,40 @@
 		}
 	};
 	
-	DeleteView.setDefaults = function(event)
+	exports.DeleteView.prepareForDelete = function(event)
 	{
-		var options = [];
-		if (deleteVersionsBox.checked) options.push('ALLVERSIONS');
-		if (deleteOnlyContentBox.checked) options.push('ONLYCONTENT');
-		if (deleteSubfoldersBox.checked) options.push('SUBFOLDERS');
-		if (deleteAssetsBox.checked) options.push('CONTAINEDASSETS');
-		var data = [{'values': options}];
+		var allVersions = deleteVersionsBox.checked;
+		var onlyContent = deleteOnlyContentBox.checked;
+		var subfolders = deleteSubfoldersBox.checked;
+		var containedAssets = deleteAssetsBox.checked;
+		var deleteDialogView =  otui.Views.containing(event.target);
+		var preventDefaultRefresh = deleteDialogView.properties.preventDefaultRefresh;
 		
-		otui.PreferencesManager.setPreferenceById('deleteOptions', data, function(response){
-			if (response.user_preference_resource.preference_data[0])
-			{
-				otui.NotificationManager.showNotification(
-				{
-					'message' : otui.tr("Defaults set."), 
-					'stayOpen': false,
-					'status' : 'ok' 
-				});
-			}
-			else
-			{
-				otui.NotificationManager.showNotification(
-				{
-					'message' : otui.tr("Defaults failed to be set."), 
-					'stayOpen': true,
-					'status' : 'error' 
-				});
-			}
-		});
-	};
+		var dialogOptions = {
+			"allVersions" : allVersions,
+			"onlyContent" : onlyContent,
+			"subfolders" : subfolders,
+			"containedAssets" : containedAssets,
+			"preventDefaultRefresh" : preventDefaultRefresh
+		}
+		var dialogElement = event.target;
+		if(deleteDialogView.properties.dialogProperties.fetchRepresentation)
+		{
+			var childrenOption = "APPLY_ONLY_TO_THIS_CONTAINER";
+			if (subfolders && !containedAssets) childrenOption = "APPLY_ONLY_TO_DESCENDANT_CONTAINERS";
+			else if (!subfolders && containedAssets) childrenOption = "APPLY_ONLY_TO_DESCENDANT_ASSETS";
+			else if (subfolders && containedAssets) childrenOption = "APPLY_TO_ALL_DESCENDANTS";
+			
+			var dialogProps = {"asset_state_options_param":{"asset_state_options":{"type": "com.artesia.asset.DeleteAssetOptions", "apply_to_all_versions":allVersions,"delete_only_content":onlyContent,"hierarchical_processing_options":childrenOption}}};
+			dialogProps.savedValues = dialogOptions;
+			dialogOptions = dialogProps;
+		}
+		if(deleteDialogView.properties.dialogProperties.save.handler)
+			deleteDialogView.properties.dialogProperties.save.handler.call(this, dialogElement, dialogOptions);
+			
+	}
 	
-	DeleteView.help = function(event)
-	{
-		
-	};
-	
-	DeleteView.show = function(data, options)
+	exports.DeleteView.show = function(data, options)
 	{
 		options.confirmClose = false; 
 		DeleteView.prototype.dialogProperties = DeleteView.prototype.dialogProperties || {};
@@ -117,46 +114,10 @@
 		
 	};
 	
-	
-	DeleteView.prepareForDelete = function(event)
-	{
-		var allVersions = deleteVersionsBox.checked;
-		var onlyContent = deleteOnlyContentBox.checked;
-		var subfolders = deleteSubfoldersBox.checked;
-		var containedAssets = deleteAssetsBox.checked;
-		var deleteDialogView =  otui.Views.containing(event.target);
-		var preventDefaultRefresh = deleteDialogView.properties.preventDefaultRefresh;
-		
-		var dialogOptions = {
-			"allVersions" : allVersions,
-			"onlyContent" : onlyContent,
-			"subfolders" : subfolders,
-			"containedAssets" : containedAssets,
-			"preventDefaultRefresh" : preventDefaultRefresh
-		}
-		var dialogElement = event.target;
-		if(deleteDialogView.properties.dialogProperties.fetchRepresentation)
-		{
-			var childrenOption = "APPLY_ONLY_TO_THIS_CONTAINER";
-			if (subfolders && !containedAssets) childrenOption = "APPLY_ONLY_TO_DESCENDANT_CONTAINERS";
-			else if (!subfolders && containedAssets) childrenOption = "APPLY_ONLY_TO_DESCENDANT_ASSETS";
-			else if (subfolders && containedAssets) childrenOption = "APPLY_TO_ALL_DESCENDANTS";
-			
-			var dialogProps = {"asset_state_options_param":{"asset_state_options":{"type": "com.artesia.asset.DeleteAssetOptions", "apply_to_all_versions":allVersions,"delete_only_content":onlyContent,"hierarchical_processing_options":childrenOption}}};
-			dialogProps.savedValues = dialogOptions;
-			dialogOptions = dialogProps;
-		}
-		if(deleteDialogView.properties.dialogProperties.save.handler)
-			deleteDialogView.properties.dialogProperties.save.handler.call(this, dialogElement, dialogOptions);
-			
-	}
-	
-	DeleteView.executeDelete = function(dialogElement , dialogProps)
+	exports.DeleteView.executeDelete = function(dialogElement, dialogProps)
 	{
 		var viewObj = otui.Views.containing(dialogElement);
-		otui.DialogUtils.cancelDialog(dialogElement, true);
-		
-		AssetManager.deleteAssets(dialogProps.allVersions, dialogProps.onlyContent, dialogProps.subfolders, dialogProps.containedAssets, dialogProps.preventDefaultRefresh, function(response, success)
+		AssetManager.deleteAssets(false, true, false, false, false, function(response, success)
 		{
 			var successList = [];
 			var failList = [];
@@ -170,6 +131,7 @@
 				
 				failList = response.bulk_asset_result_representation.bulk_asset_result.failed_object_list;
 			}
+			otui.DialogUtils.cancelDialog(dialogElement, true);
 			
 			// output a notification to the user
 			if (success)
@@ -223,7 +185,7 @@
 	/**
 	 * Provide a default value for a mandatory NAMED_VIEW
 	 */
-	DeleteView.getDefault = function () {
+	exports.DeleteView.getDefault = function () {
 		var defaultObj = {
 			"asset_state_options_param": {
 				"asset_state_options": {
