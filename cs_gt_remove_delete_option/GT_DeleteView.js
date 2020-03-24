@@ -117,7 +117,7 @@
 	exports.DeleteView.executeDelete = function(dialogElement, dialogProps)
 	{
 		var viewObj = otui.Views.containing(dialogElement);
-		AssetManager.deleteAssets(false, true, false, false, false, function(response, success)
+		AssetManager.deleteAssets(false, false, false, false, false, function(response, success)
 		{
 			var successList = [];
 			var failList = [];
