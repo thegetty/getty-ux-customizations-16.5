@@ -18,12 +18,9 @@
 								self, placeContent) {
 							placeContent(this.getTemplate("content"));
 							var term = window.recent_asset_request_name;
-							console.log("term " + term)
 							var folderId = window.recent_asset_request_asset_id
-							console.log("folderId " + folderId)
 							canLink = (typeof term !== "undefined" && term !== "" && typeof folderId !== "undefined"
 									&& folderId !== "")
-							console.log("canLink " + canLink)
 							if (canLink) {
 								$("#assetRequestFolderIB").val(term);
 							}
@@ -34,6 +31,20 @@
 										"setup",
 										function() {
 											var self = this;
+											$("#assetRequestFolderIB").change(function(event){
+												resource = event.currentTarget
+												var currentTerm = $(resource).val();
+												console.log("change " + currentTerm)
+												if (currentTerm !=window.recent_asset_request_name)
+													RequestFolderManager.getFolderIdByName(currentTerm, handleSearchResultResourceResponse)	
+											})
+											$("#assetRequestFolderIB").on("mouseout", function(event){
+												resource = event.currentTarget
+												var currentTerm = $(resource).val();
+												console.log("blur " + currentTerm)
+												if (currentTerm !=window.recent_asset_request_name)
+													RequestFolderManager.getFolderIdByName(currentTerm, handleSearchResultResourceResponse)	
+											})
 											$(
 													"#gt-linkrequestfolder-cancelButton")
 													.click(
@@ -46,16 +57,6 @@
 													"#gt-linkrequestfolder-linkButton")
 													.click(
 															function(event) {
-																// Need to have
-																// selection
-																// capability,
-																// in case, user
-																// decides to
-																// change folder
-																// name,
-																// so we link to
-																// correct
-																// folder id
 																var folderId = window.recent_asset_request_asset_id
 																if (folderId === "") {
 																	otui.NotificationManager
@@ -77,6 +78,39 @@
 															});
 										});
 					});
+
+	
+	function handleSearchResultResourceResponse(data, status, success, folderName){
+		if(!success){
+			console.log(status)
+		}
+		var hitCount = data.search_result_resource.search_result.hit_count;
+		if (hitCount == 0) {
+			window.recent_asset_request_asset_id=undefined
+			window.recent_asset_request_name=folderName
+			$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
+			otui.NotificationManager.showNotification({
+				'message' : 'Asset Request Folder '
+				+ folderName
+				+ ' was not found',
+				'status' : 'warning'
+			});
+			} else if (hitCount == 1) {
+				window.recent_asset_request_asset_id=data.search_result_resource.search_result.asset_id_list[0]
+				window.recent_asset_request_name=folderName
+				$("#gt-linkrequestfolder-linkButton").attr('disabled', false);
+			} else {
+				window.recent_asset_request_asset_id=undefined
+				window.recent_asset_request_name=folderName
+				$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
+				otui.NotificationManager.showNotification({
+					'message' : 'Asset Request Folder '
+						+ folderName
+						+ ' has ambigious results',
+					'status' : 'warning'
+				});
+			}
+	}
 
 	function linkToRequestFolder(event, resource) {
 		event.stopPropagation();
