@@ -5,11 +5,10 @@
 					"LinkToRequestFolderView",
 					function() {
 						var view;
-						// Properties for the business card.
 						this.properties = {
 							'name' : 'linkrequestfolderview', // Name is
 							'title' : otui.tr("Add to Asset Request"),
-							'assetId' : undefined
+							'selectionContext' : undefined
 						};
 						// Function called to create the content for this view.
 						// Note
@@ -17,34 +16,48 @@
 						this._initContent = function initLinkToRequestFolder(
 								self, placeContent) {
 							placeContent(this.getTemplate("content"));
-							var term = window.recent_asset_request_name;
-							var folderId = window.recent_asset_request_asset_id
-							canLink = (typeof term !== "undefined" && term !== "" && typeof folderId !== "undefined"
-									&& folderId !== "")
-							if (canLink) {
-								$("#assetRequestFolderIB").val(term);
+							$("#gt-linkrequestfolder-linkButton").attr(
+									'disabled', true);
+							if (self.properties.recentAR) {
+								self.properties.assetRequestName = self.properties.recentAR.name
+								$("#assetRequestFolderIB").val(
+										self.properties.assetRequestName);
+								$("#gt-linkrequestfolder-linkButton").attr(
+										'disabled', false);
 							}
-							$("#gt-linkrequestfolder-linkButton").attr('disabled', !canLink);
 						};
 						this
 								.bind(
 										"setup",
 										function() {
 											var self = this;
-											$("#assetRequestFolderIB").change(function(event){
-												resource = event.currentTarget
-												var currentTerm = $(resource).val();
-												console.log("change " + currentTerm)
-												if (currentTerm !=window.recent_asset_request_name)
-													RequestFolderManager.getFolderIdByName(currentTerm, handleSearchResultResourceResponse)	
-											})
-											$("#assetRequestFolderIB").on("mouseout", function(event){
-												resource = event.currentTarget
-												var currentTerm = $(resource).val();
-												console.log("blur " + currentTerm)
-												if (currentTerm !=window.recent_asset_request_name)
-													RequestFolderManager.getFolderIdByName(currentTerm, handleSearchResultResourceResponse)	
-											})
+											$("#assetRequestFolderIB")
+													.on(
+															"keypress",
+															function(event) {
+																event
+																		.stopPropagation();
+																var keycode = (event.keyCode ? event.keyCode
+																		: event.which);
+																// ENTER key
+																if (keycode == '13') {
+																	handleEvent(self);
+																}
+															});
+											$(".gt-linkdialog-body")
+													.on(
+															"mouseover mousemove",
+															function(event) {
+																var folderName = $(
+																		"#assetRequestFolderIB")
+																		.val();
+																var isEmpty = (folderName == "" || folderName == undefined)
+																$(
+																		"#gt-linkrequestfolder-linkButton")
+																		.attr(
+																				'disabled',
+																				isEmpty);
+															})
 											$(
 													"#gt-linkrequestfolder-cancelButton")
 													.click(
@@ -55,61 +68,83 @@
 
 											$(
 													"#gt-linkrequestfolder-linkButton")
-													.click(
-															function(event) {
-																var folderId = window.recent_asset_request_asset_id
-																if (folderId === "") {
-																	otui.NotificationManager
-																			.showNotification({
-																				'message' : 'Please give name for asset request folder',
-																				'status' : 'warning'
-																			});
-																} else {
-																	console
-																			.log(self.properties.assetId);
-																	RequestFolderManager
-																			.linkAssetsToFolder(
-																					folderId,
-																					self.properties.assetId);
-
-																}
-																otui.DialogUtils
-																		.cancelDialog(event.target);
-															});
+													.click(function(event) {
+														handleEvent(self);
+													});
 										});
 					});
 
-	
-	function handleSearchResultResourceResponse(data, status, success, folderName){
-		if(!success){
-			console.log(status)
-		}
-		var hitCount = data.search_result_resource.search_result.hit_count;
-		if (hitCount == 0) {
-			window.recent_asset_request_asset_id=undefined
-			window.recent_asset_request_name=folderName
+	function handleEvent(view) {
+		var folderName = $("#assetRequestFolderIB").val();
+		if (folderName == "" || folderName == undefined) {
 			$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
 			otui.NotificationManager.showNotification({
-				'message' : 'Asset Request Folder '
-				+ folderName
-				+ ' was not found',
-				'status' : 'warning'
+				'message' : 'Please give name for asset request folder',
+				'status' : 'error'
 			});
-			} else if (hitCount == 1) {
-				window.recent_asset_request_asset_id=data.search_result_resource.search_result.asset_id_list[0]
-				window.recent_asset_request_name=folderName
-				$("#gt-linkrequestfolder-linkButton").attr('disabled', false);
+		} else {
+			view.properties.assetRequestName = folderName;
+			recentAR = RequestFolderManager.getRecentAssetRequest()
+			if (recentAR != undefined
+					&& recentAR.name == view.properties.assetRequestName
+					&& recentAR.asset_id != undefined) {
+				RequestFolderManager.linkAssetsToFolder(recentAR,
+						view.properties.selectionContext,
+						handleLinkResultResponse);
 			} else {
-				window.recent_asset_request_asset_id=undefined
-				window.recent_asset_request_name=folderName
-				$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
-				otui.NotificationManager.showNotification({
-					'message' : 'Asset Request Folder '
-						+ folderName
-						+ ' has ambigious results',
-					'status' : 'warning'
-				});
+				RequestFolderManager.getFolderIdByName(folderName,
+						view.properties.selectionContext,
+						handleSearchResultResourceResponse)
 			}
+		}
+	}
+
+	function handleSearchResultResourceResponse(data, status, success,
+			folderName, selectionContext) {
+		if (success) {
+			var hitCount = data.search_result_resource.search_result.hit_count;
+			if (hitCount == 0) {
+				showErrorNotification('Asset Request Folder ' + folderName
+						+ ' was not found', folderName);
+			} else if (hitCount == 1) {
+				assetRequest = {
+					'asset_id' : data.search_result_resource.search_result.asset_id_list[0],
+					'name' : folderName
+				}
+				RequestFolderManager.linkAssetsToFolder(assetRequest,
+						selectionContext, handleLinkResultResponse);
+			} else {
+				showErrorNotification('Asset Request Folder ' + folderName
+						+ ' has ambigious results', folderName)
+			}
+		} else {
+			if (status == 500)
+				showErrorNotification(data.exception_body.message, folderName)
+			else {
+				showErrorNotification("Didn't link folder " + folderName
+						+ " because error has occurred.")
+			}
+		}
+	}
+
+	function handleLinkResultResponse(message, status, assetRequest) {
+			otui.NotificationManager
+					.showNotification({
+						'message' : message,
+						'status' : status
+					});
+	}
+
+	function showErrorNotification(message, folderName) {
+		RequestFolderManager.setRecentAssetRequest = {
+			'name' : folderName,
+			'asset_id' : undefined
+		};
+		$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
+		otui.NotificationManager.showNotification({
+			'message' : message,
+			'status' : 'error'
+		});
 	}
 
 	function linkToRequestFolder(event, resource) {
@@ -124,9 +159,11 @@
 		}
 		try {
 			var isSelected = selectionContext.selection_context_param.selection_context.asset_ids.length > 0
+			var assetRequest = RequestFolderManager.getRecentAssetRequest()
 			if (isSelected) {
 				LinkToRequestFolderView.asDialog({
-					"assetId" : selectionContext
+					"selectionContext" : selectionContext,
+					"recentAR" : assetRequest
 				});
 			} else {
 				otui.NotificationManager.showNotification({

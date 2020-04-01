@@ -42,7 +42,6 @@
 																	'readonly',
 																	true);
 													newFolderNameTextBox.value = response;
-													window.recent_asset_request_name = response;
 												});
 							}
 							// ///
