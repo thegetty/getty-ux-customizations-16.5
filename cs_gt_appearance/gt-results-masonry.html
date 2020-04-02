@@ -121,7 +121,7 @@
 	</template>
 	<template id="masonry-cell#default" ot-template ot-view="ResultsView">
 		<ot-resource template="masonry-cell-base" ot-platform="tablet" ot-onselect="route:open-contents(resourceID,resourceType)">
-			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+			<ot-rendition ot-cell-content class="masonry-cell-content-inner" ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-width-view-prop="cellWidth" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}' ot-show-rollover></ot-rendition>
 			<div ot-cell-metadata onclick="event.stopImmediatePropagation();" class="ot-asset-type-wrapper">
 				<ot-metadata ot-as-image ot-fields="ot-resource-type-icon" class="ot-asset-type">
 					<ot-metadata ot-as-attribute ot-value-as-title ot-fields="ot-resource-type-display" class="ot-asset-type-mask"></ot-metadata>

@@ -1,10 +1,13 @@
 <!-- link rel="stylesheet" type="text/css" href="./grid-cell.css"/-->
 <script type="text/javascript" src="../otmm/view/resultsView/grid-cell/grid-cell.js"></script>
 
-<template-group id="grid-cell" ot-view="ResultsView" ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
-<template-group id="grid-cell" ot-view="WidgetFolderResultsView" ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
+<template-group id="grid-cell" ot-view="ResultsView" 
+				ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
+<template-group id="grid-cell" ot-view="WidgetFolderResultsView" 
+				ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
 <template-group id="grid-cell-phone" ot-view="MyTasksInspectorAssetsTabView" ot-properties='{}'>
-<template-group id="grid-cell" ot-view="WidgetSavedSearchView" ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
+<template-group id="grid-cell" ot-view="WidgetSavedSearchView" 
+				ot-properties='{"with-autocolumns" : true, "lazy-load" : true}'>
 <template-group id="grid-cell" ot-view="LinkPaneSourceAssetsView" ot-properties='{}'>
 <template-group id="grid-cell" ot-view="LinkPaneLinkedAssetsView" ot-properties='{}'>
 
@@ -158,7 +161,7 @@
 
 <template ot-template ot-view="ResultsView" id="grid-cell#default">
 	<ot-resource ot-platform="desktop" template="grid-cell-master" ot-onSpecialSelect='{"click":"SelectionManager.handleAssetSelection", "dblclick" : "route:open-contents(resourceID,resourceType)"}'>
-		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}'></ot-rendition>
+		<ot-rendition cell-content ot-rendition-format="img" ot-rendition-types="Thumbnail" ot-minimum-size="96" ot-fallback='{"useResourceType" : true, "width" : 96, "height" : 96}' ot-show-rollover></ot-rendition>
 		<content-area asset-type>
 			<ot-metadata ot-as-image ot-fields="ot-resource-type-icon" class="ot-asset-type">
 				<ot-metadata ot-as-attribute ot-value-as-title ot-fields="ot-resource-type-display" class="ot-asset-type-mask"></ot-metadata>
