@@ -8,6 +8,19 @@
 	 */
 	var RequestFolderManager = exports.RequestFolderManager = function RequestFolderManager() {
 	};
+	
+	RequestFolderManager.attachFolderChildrenErrorMappings = {
+			"ASSET_NOT_ALLOWED":"ASSET_NOT_ALLOWED",
+			"CANT_BE_ROOT":"Can't append root folder to no root folder.",
+			"CIRCULAR":"Circular Dependency. This folder is already part of parent hierarchy.",
+			"CONTAINER_TYPE_NOT_ALLOWED":"Can't attach a folder to folder",
+			"EXISTING_CHILD":"Asset has been already attached to a folder",
+			"INACTIVE":"Asset is not active",
+			"NO_EDIT_PARENTS":"NO_EDIT_PARENTS",
+			"SINGLE_PARENT":"SINGLE_PARENT",
+			"USER_GROUP_CANNOT_CREATE_CONTAINER":"No Permissions to create folder.",
+			"NOT_EXIST":"Asset doesn't exist."
+	}
 
 	RequestFolderManager.recentlyCreatedARFolder = undefined
 
@@ -63,9 +76,18 @@
 								message = "";
 								status = "";
 								if (operationResult.valid_children.length == 0) {
-									message = "Assets couldn't be attached to asset request folder "
-											+ assetRequest.name + '.'
-									status = "error"
+									reason = "";
+									operationResult.failed_children
+											.forEach(function(asset) {
+												reason = RequestFolderManager.attachFolderChildrenErrorMappings[asset.reasons[0]]
+												if (reason != undefined ) {
+													message = reason + " " + assetRequest.name
+															+ '.'
+												}else{
+													message = "Couldn't attach assets to folder"
+												}
+												status = "error"
+											})
 								} else if (operationResult.valid_children.length > 0
 										&& operationResult.failed_children.length > 0) {
 									RequestFolderManager

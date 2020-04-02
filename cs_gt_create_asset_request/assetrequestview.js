@@ -1,11 +1,11 @@
 (function(exports) {
-    exports.AssetRequestConstants = {
-            ASSET_REQUEST_FOLDER_ID : "2fb0078a9f514c08ce9c60afba3d95aa5416edc5",
-            ASSET_REQUEST_TYPE_ID : "GTRUST.FOLDER.ASSET REQUEST",
-            ASSET_REQUEST_ENDPOINT : "/otmmapi/requestid",
-            ASSET_REQUEST_CREATE_FET : "CUSTOM.ASSET_REQUEST.CREATE"
-        };
-    
+	exports.AssetRequestConstants = {
+		ASSET_REQUEST_FOLDER_ID : "2fb0078a9f514c08ce9c60afba3d95aa5416edc5",
+		ASSET_REQUEST_TYPE_ID : "GTRUST.FOLDER.ASSET REQUEST",
+		ASSET_REQUEST_ENDPOINT : "/otmmapi/requestid",
+		ASSET_REQUEST_CREATE_FET : "CUSTOM.ASSET_REQUEST.CREATE"
+	};
+
 	exports.AssetRequestView = otui
 			.augment(
 					"NewFolderView",
@@ -232,11 +232,24 @@
 				&& clickSourceMenu) {
 			parentFolderId = AssetRequestConstants.ASSET_REQUEST_FOLDER_ID;
 		}
+		metadata = metadataView.getFilledMetadata("folder");
+		// Manually add requestID field to metadata:
+		metadata.folder_resource.folder.metadata.metadata_element_list.push({
+			"id" : "GTRUST.FIELD.REQUEST ID",
+			"type" : "com.artesia.metadata.MetadataField",
+			"value" : {
+				"value" : {
+					"type" : "int",
+					"value" : newFolderName
+				}
+			}
+		})
+		console.log(metadata)
 		FolderManager.createFolder({
 			"name" : newFolderName,
 			"type" : selectedFolderId,
 			"folderID" : parentFolderId,
-			"metadata" : metadataView.getFilledMetadata("folder"),
+			"metadata" : metadata,
 			"securityPolicies" : assignedSecurityPolicies
 		});
 		otui.DialogUtils.cancelDialog(event.target, true);
@@ -286,37 +299,50 @@
 			createFolder.call(newFolderDialogView, event, newFolderName);
 		}
 	};
-	
-	var checkForDuplicateFolders = function checkForDuplicateFolders(newFolderName, parentFolderId, callback) {
+
+	var checkForDuplicateFolders = function checkForDuplicateFolders(
+			newFolderName, parentFolderId, callback) {
 		var self = this;
-		var folderNamesList = [newFolderName];
-		var data = { "folderNameList": folderNamesList, "parentFolderId": parentFolderId };
-		AssetDetailManager.checkDuplicateFolders(data, function (response, success) {
-			self.storedProperty("duplicateFolderValidated", true);
-			if (success && response) {
-				var duplicateFoldersCount = ((response.assets_resource || {}).asset_list || []).length;
-				if (duplicateFoldersCount > 0) {
-					var buttonNames = [otui.tr("Continue"), otui.tr("Cancel")];
-					var validationMessage = otui.tr("One or more folders with the same name already exist in the current folder. If you continue, new folder will be created with the same name as the existing folder.");
-					otui.confirm({ 'title': otui.tr("Confirm"), 'buttons': buttonNames, 'message': validationMessage, 'type': otui.alertTypes.CONFIRM },
-						function (doit) {
-							self.storedProperty("duplicateFolderValidated", true);
-							if (doit) {
+		var folderNamesList = [ newFolderName ];
+		var data = {
+			"folderNameList" : folderNamesList,
+			"parentFolderId" : parentFolderId
+		};
+		AssetDetailManager
+				.checkDuplicateFolders(
+						data,
+						function(response, success) {
+							self.storedProperty("duplicateFolderValidated",
+									true);
+							if (success && response) {
+								var duplicateFoldersCount = ((response.assets_resource || {}).asset_list || []).length;
+								if (duplicateFoldersCount > 0) {
+									var buttonNames = [ otui.tr("Continue"),
+											otui.tr("Cancel") ];
+									var validationMessage = otui
+											.tr("One or more folders with the same name already exist in the current folder. If you continue, new folder will be created with the same name as the existing folder.");
+									otui.confirm({
+										'title' : otui.tr("Confirm"),
+										'buttons' : buttonNames,
+										'message' : validationMessage,
+										'type' : otui.alertTypes.CONFIRM
+									}, function(doit) {
+										self.storedProperty(
+												"duplicateFolderValidated",
+												true);
+										if (doit) {
+											callback(true);
+										} else {
+											callback(false);
+										}
+									});
+								} else {
+									callback(true);
+								}
+							} else {
 								callback(true);
 							}
-							else {
-								callback(false);
-							}
 						});
-				}
-				else {
-					callback(true);
-				}
-			}
-			else {
-				callback(true);
-			}
-		});
 	}
 
 	// ///
