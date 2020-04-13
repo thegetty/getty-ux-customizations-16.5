@@ -41,7 +41,7 @@
 																		: event.which);
 																// ENTER key
 																if (keycode == '13') {
-																	handleEvent(self);
+																	handleEvent(self, this);
 																}
 															});
 											$(".gt-linkdialog-body")
@@ -69,12 +69,12 @@
 											$(
 													"#gt-linkrequestfolder-linkButton")
 													.click(function(event) {
-														handleEvent(self);
+														handleEvent(self, this);
 													});
 										});
 					});
 
-	function handleEvent(view) {
+	function handleEvent(view, element) {
 		var folderName = $("#assetRequestFolderIB").val();
 		if (folderName == "" || folderName == undefined) {
 			$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
@@ -88,6 +88,7 @@
 			if (recentAR != undefined
 					&& recentAR.name == view.properties.assetRequestName
 					&& recentAR.asset_id != undefined) {
+				otui.DialogUtils.cancelDialog(element);
 				RequestFolderManager.linkAssetsToFolder(recentAR,
 						view.properties.selectionContext,
 						handleLinkResultResponse);
@@ -128,11 +129,12 @@
 	}
 
 	function handleLinkResultResponse(message, status, assetRequest) {
-			otui.NotificationManager
+		otui.NotificationManager
 					.showNotification({
 						'message' : message,
 						'status' : status
 					});
+			
 	}
 
 	function showErrorNotification(message, folderName) {
