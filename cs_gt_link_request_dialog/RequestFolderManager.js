@@ -33,7 +33,7 @@
 	}
 
 	RequestFolderManager.getFolderIdByName = function(folderName,
-			selectionContext, callback) {
+			selectionContext, element, callbackSuccess, callbackError) {
 		console.log("getFolderIdByName " + folderName)
 		var search_condition = {
 			"search_condition_list" : {
@@ -57,12 +57,34 @@
 		var serviceUrl = otui.service + "/search/text" + "?" + params.join("&");
 		otui.post(serviceUrl, undefined, otui.contentTypes.formData, function(
 				data, status, success) {
-			callback(data, status, success, folderName, selectionContext)
+			if (success) {
+				var hitCount = data.search_result_resource.search_result.hit_count;
+				if (hitCount == 0) {
+					callbackError('Asset Request Folder ' + folderName
+							+ ' was not found.');
+				} else if (hitCount == 1) {
+					assetRequest = {
+							'asset_id' : data.search_result_resource.search_result.asset_id_list[0],
+							'name' : folderName
+						}
+					callbackSuccess(assetRequest,selectionContext, element)
+				} else {
+					callbackError('Asset Request Folder ' + folderName
+							+ ' has ambigious results.')
+				}
+			} else {
+				if (status == 500)
+					callbackError(data.exception_body.message)
+				else {
+					callbackError("Didn't link folder " + folderName
+							+ " because error has occurred.")
+				}
+			}
 		});
 	}
 
 	RequestFolderManager.linkAssetsToFolder = function(assetRequest,
-			selectionContext, callback) {
+			selectionContext, element, callbackSuccess, callbackError) {
 		otui.services.folderChildren
 				.update(
 						{
@@ -73,8 +95,6 @@
 						function(data, success) {
 							if (success) {
 								operationResult = data.folder_operation_resource.folder_operation_result
-								message = "";
-								status = "";
 								if (operationResult.valid_children.length == 0) {
 									reason = "";
 									operationResult.failed_children
@@ -86,24 +106,21 @@
 												}else{
 													message = "Couldn't attach assets to folder"
 												}
-												status = "error"
 											})
+									callbackError(message)
 								} else if (operationResult.valid_children.length > 0
 										&& operationResult.failed_children.length > 0) {
 									RequestFolderManager
 											.setRecentAssetRequest(assetRequest);
-									message = "Some assets couldn't be attached to asset request folder "
-											+ assetRequest.name + '.'
-									status = "error"
+									callbackError("Some assets couldn't be attached to asset request folder "
+											+ assetRequest.name + '.')
 								} else {
 									RequestFolderManager
 											.setRecentAssetRequest(assetRequest);
-									message = 'Assets have been successfully added to asset request folder '
-											+ assetRequest.name + '.'
-									status = "information"
+									callbackSuccess('Assets have been successfully added to asset request folder '
+											+ assetRequest.name + '.', element)
 								}
 							}
-							callback(message, status, assetRequest)
 						});
 	}
 })(window);

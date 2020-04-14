@@ -1,4 +1,3 @@
-// Now do refactoring add ajax logic to some folder manager.
 (function(exports) {
 	exports.LinkToRequestFolderView = otui
 			.define(
@@ -41,7 +40,9 @@
 																		: event.which);
 																// ENTER key
 																if (keycode == '13') {
-																	handleEvent(self, this);
+																	handleEvent(
+																			self,
+																			this);
 																}
 															});
 											$(".gt-linkdialog-body")
@@ -68,84 +69,54 @@
 
 											$(
 													"#gt-linkrequestfolder-linkButton")
-													.click(function(event) {
-														handleEvent(self, this);
-													});
+													.click(
+															function(event) {
+																handleEvent(
+																		self,
+																		this);
+															});
 										});
 					});
 
 	function handleEvent(view, element) {
 		var folderName = $("#assetRequestFolderIB").val();
 		if (folderName == "" || folderName == undefined) {
-			$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
-			otui.NotificationManager.showNotification({
-				'message' : 'Please give name for asset request folder',
-				'status' : 'error'
-			});
+			showErrorNotification('Please give name for asset request folder');
 		} else {
 			view.properties.assetRequestName = folderName;
 			recentAR = RequestFolderManager.getRecentAssetRequest()
 			if (recentAR != undefined
 					&& recentAR.name == view.properties.assetRequestName
 					&& recentAR.asset_id != undefined) {
-				otui.DialogUtils.cancelDialog(element);
 				RequestFolderManager.linkAssetsToFolder(recentAR,
-						view.properties.selectionContext,
-						handleLinkResultResponse);
+						view.properties.selectionContext, element,
+						handleLinkResultResponse, showErrorNotification);
 			} else {
 				RequestFolderManager.getFolderIdByName(folderName,
-						view.properties.selectionContext,
-						handleSearchResultResourceResponse)
+						view.properties.selectionContext, element,
+						handleSearchResultResourceResponse, showErrorNotification)
 			}
 		}
 	}
 
-	function handleSearchResultResourceResponse(data, status, success,
-			folderName, selectionContext) {
-		if (success) {
-			var hitCount = data.search_result_resource.search_result.hit_count;
-			if (hitCount == 0) {
-				showErrorNotification('Asset Request Folder ' + folderName
-						+ ' was not found', folderName);
-			} else if (hitCount == 1) {
-				assetRequest = {
-					'asset_id' : data.search_result_resource.search_result.asset_id_list[0],
-					'name' : folderName
-				}
-				RequestFolderManager.linkAssetsToFolder(assetRequest,
-						selectionContext, handleLinkResultResponse);
-			} else {
-				showErrorNotification('Asset Request Folder ' + folderName
-						+ ' has ambigious results', folderName)
-			}
-		} else {
-			if (status == 500)
-				showErrorNotification(data.exception_body.message, folderName)
-			else {
-				showErrorNotification("Didn't link folder " + folderName
-						+ " because error has occurred.")
-			}
-		}
+	function handleSearchResultResourceResponse(assetRequest, selectionContext, element) {
+		RequestFolderManager.linkAssetsToFolder(assetRequest,
+					selectionContext, element, handleLinkResultResponse, showErrorNotification);
 	}
 
-	function handleLinkResultResponse(message, status, assetRequest) {
-		otui.NotificationManager
-					.showNotification({
-						'message' : message,
-						'status' : status
-					});
-			
+	function handleLinkResultResponse(message, element) {
+		otui.DialogUtils.cancelDialog(element);
+		otui.NotificationManager.showNotification({
+			'message' : message,
+			'status' : "information"
+		});
 	}
 
-	function showErrorNotification(message, folderName) {
-		RequestFolderManager.setRecentAssetRequest = {
-			'name' : folderName,
-			'asset_id' : undefined
-		};
+	function showErrorNotification(message) {
 		$("#gt-linkrequestfolder-linkButton").attr('disabled', true);
 		otui.NotificationManager.showNotification({
 			'message' : message,
-			'status' : 'error'
+			'status' : "error"
 		});
 	}
 
@@ -168,16 +139,10 @@
 					"recentAR" : assetRequest
 				});
 			} else {
-				otui.NotificationManager.showNotification({
-					'message' : 'No assets have been selected',
-					'status' : 'error'
-				});
+				showErrorNotification('No assets have been selected')
 			}
 		} catch (error) {
-			otui.NotificationManager.showNotification({
-				'message' : 'No assets have been selected',
-				'status' : 'error'
-			});
+			showErrorNotification('No assets have been selected')
 		}
 	}
 
