@@ -13,9 +13,9 @@
 	};
 	
 	function goAdmin(event, resource){
-		window.open("/teams", "PopupWindow", "width=600,height=600,scrollbars=yes,resizable=no");
+		window.open("/teams", "PopupWindow", "width=1024,height=768,scrollbars=yes,resizable=no");
 	}
 
 	otui.HelpActions.register({'name' : 'gogetty', 'text' : otui.tr('GO Help Page'), 'setup' : setupGoGetty, 'select' : goGetty}, 2);
-	otui.HelpActions.register({'name' : 'goadmin', 'text' : otui.tr('OpenText Admin'), 'setup' : setupGoAdmin, 'select' : goAdmin}, 3);
+	otui.HelpActions.register({'name' : 'goadmin', 'text' : otui.tr('Administration Portal'), 'setup' : setupGoAdmin, 'select' : goAdmin}, 3);
 })(window);
