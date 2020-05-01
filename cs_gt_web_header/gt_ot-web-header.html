@@ -1,0 +1,31 @@
+<link rel="stylesheet" type="text/css" href="./gt_ot-web-header.css"/>
+<template id="ot-web-header-content" ot-template>
+	<div class="ot-web-header-bar">
+		<div class="ot-web-header-bar-left">
+			<ot-navigation class="ot-navigation" tabindex="0"></ot-navigation>
+			<div class="ot-home" tabindex="0"><ot-i18n ot-as-title>Home</ot-i18n></div>
+			<div class="add-new-widget-header" tabindex="0"><ot-i18n ot-as-title>Add widget</ot-i18n></div>
+			<div class="getty_logo" style="background-image: url(./cs_gt_web_header/img/getty_logo_otmm_87x35.png);width: 6rem;height: 32px;display: inline-block;background-position: center;vertical-align: middle;background-repeat: no-repeat;background-size:contain;"></div>
+			<div class="ot-current-user-last-login-time" tabindex="0"> </div>
+		</div>
+
+		<div class="ot-web-header-bar-right">
+			<div class="ot-search-container">
+				<div class="ot-search-wrapper">
+					<input id="searchInput" type="text" class="ot-search-input" onfocus="otui.Search.handleMega(event)" onkeypress="otui.Search.handleKeypress(event)" onkeyup="otui.Search.handleKeyUp(event);" onmousedown="otui.Search.handleMouseDown(event);" onfocusout="otui.Search.hideElement(event);" >
+					<span class="ot-search-clear" onmousedown="otui.Search.clear(event)"></span>
+				</div>
+				<span class="ot-search-button" tabindex="0" onclick="otui.Search.performKeywordSearch(this);" onkeyup = "otui.Search.handleNavigation(event);" onmousedown="otui.Search.handleMouseDown(event);"><ot-i18n ot-as-title>Search</ot-i18n></span>
+				<ot-hover id="ot-search-mega-hover" class="ot-search-mega-hover-class" ot-as-menu template="ot-search-mega-hover"></ot-hover>
+			</div>
+			<ot-activity-tracker></ot-activity-tracker>
+			<div class="ot-web-header-link">
+				<ot-point ot-lookup="HelpActions" class="ot-web-header-icons ot-help-actions"></ot-point>
+					<ot-user-profile></ot-user-profile>
+			</div>
+		</div>
+		
+	</div>
+</template>
+
+<script src="../ui/import.js"></script>
