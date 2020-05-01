@@ -13,7 +13,7 @@
 	};
 	
 	function goAdmin(event, resource){
-		window.open("/teams", "PopupWindow", "width=1024,height=768,scrollbars=yes,resizable=no");
+		window.open("/teams", "targetWindow", "width=1024,height=768,scrollbars=yes,resizable=yes");
 	}
 
 	otui.HelpActions.register({'name' : 'gogetty', 'text' : otui.tr('GO Help Page'), 'setup' : setupGoGetty, 'select' : goGetty}, 2);
