@@ -222,8 +222,7 @@
 				'ot-security-policy');
 		var assignedSecurityPolicies = OTSecurityPolicyElement[0]
 				.getAssignedSecurityPolicyIdList();
-		var selectedFolderId = $('#newFolderTypes')[0].selectedOptions[0]
-				.getAttribute('data-folderTypeId');
+		var selectedFolderId = $('#newFolderTypes').value;
 		var foldersList = this.properties.newFolderBreadcrumb;
 		var parentFolderId = foldersList.ids[foldersList.ids.length - 1];
 		var clickSourceMenu = $('#ot-newfolder-create-button').attr(
@@ -234,25 +233,44 @@
 		}
 		metadata = metadataView.getFilledMetadata("folder");
 		// Manually add requestID field to metadata:
-		metadata.folder_resource.folder.metadata.metadata_element_list.push({
-			"id" : "GTRUST.FIELD.REQUEST ID",
-			"type" : "com.artesia.metadata.MetadataField",
-			"value" : {
-				"value" : {
-					"type" : "int",
-					"value" : newFolderName
-				}
+		var value = $("#newFolderTypes")[0].selectedOptions[0];
+		var metadataModelId = value.getAttribute('data-metadataModelId');
+		var folderTypeId = value.getAttribute('data-folderTypeId');
+		var canCreateFolder = true
+		if (metadataModelId === "GTRUST.MODEL.ASSET REQUEST") {
+			if (Number.isInteger(Number(newFolderName))) {
+				metadata.folder_resource.folder.metadata.metadata_element_list
+						.push({
+							"id" : "GTRUST.FIELD.REQUEST ID",
+							"type" : "com.artesia.metadata.MetadataField",
+							"value" : {
+								"value" : {
+									"type" : "int",
+									"value" : newFolderName
+								}
+							}
+						})
+			} else {
+				canCreateFolder = false
 			}
-		})
-		console.log(metadata)
-		FolderManager.createFolder({
-			"name" : newFolderName,
-			"type" : selectedFolderId,
-			"folderID" : parentFolderId,
-			"metadata" : metadata,
-			"securityPolicies" : assignedSecurityPolicies
-		});
-		otui.DialogUtils.cancelDialog(event.target, true);
+		}
+
+		if (canCreateFolder) {
+			FolderManager.createFolder({
+				"name" : newFolderName,
+				"type" : folderTypeId,
+				"folderID" : parentFolderId,
+				"metadata" : metadata,
+				"securityPolicies" : assignedSecurityPolicies
+			});
+			otui.DialogUtils.cancelDialog(event.target, true);
+		} else {
+			otui.NotificationManager
+					.showNotification({
+						'message' : "folder name of type Asset Request can be a number only.",
+						'status' : "error"
+					});
+		}
 	}
 
 	exports.NewFolderDialogView.onCreate = function onCreate(event) {
