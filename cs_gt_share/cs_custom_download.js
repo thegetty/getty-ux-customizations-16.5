@@ -1,25 +1,4 @@
 (function(otui) {
-	function quickDownload(event, resource, options) {
-		var renditionObject = resource.rendition_content.preview_content;
-
-		if (resource) {
-			event.stopPropagation();
-
-			var hiddenIFrameID = 'hiddenDownloader';
-			if (jQuery('#' + hiddenIFrameID).length === 0) {
-				jQuery("body").append(document.createElement('iframe'));
-				jQuery("iframe").attr({
-					id : hiddenIFrameID,
-					style : "display:none"
-				});
-			}
-			jQuery('#' + hiddenIFrameID).attr(
-					{
-						src : otui.service + "/assetsGT/" + resource.asset_id
-								+ "/quickdownload"
-					});
-		}
-	}
 
 	function setupGettyDownload(event, resource) {
 		if (!resource)
@@ -67,7 +46,7 @@
 	otui.ready(function() {
 		var entry = {
 			'name' : 'gtdownloadcustom',
-			'text' : otui.tr('Download custom'),
+			'text' : "Download",
 			'img' : {
 				desktop : './style/img/action_download_custom24.svg',
 				tablet : './style/img/download_custom.png',
@@ -77,8 +56,9 @@
 			'select' : AssetActions.downloadViaShareDialog
 		};
 
-		otui.GalleryAssetActions.register(entry, 0);
-		otui.InspectorAssetActions.register(entry, 0);
+		otui.GalleryAssetActions.register(entry, 1);
+		otui.InspectorAssetActions.register(entry, 1);
+
 
 	});
 })(otui);
