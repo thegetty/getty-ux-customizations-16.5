@@ -1,5 +1,5 @@
 (function(otui) {
-
+	
 	function setupGettyDownload(event, resource) {
 		if (!resource)
 			return false;
@@ -34,29 +34,11 @@
 					.isUser(resource));
 	}
 
-	otui.GalleryAssetActions.remove('download');
-	otui.InspectorAssetActions.remove('download');
-
 	otui.GalleryAssetActions.remove('downloadpreview');
 	otui.InspectorAssetActions.remove('downloadpreview');
-	
-	otui.GalleryAssetActions.remove('downloadcustom');
-	otui.InspectorAssetActions.remove('downloadcustom');
 
 	otui.ready(function() {
-		var entry = {
-			'name' : 'downloadcustom',
-			'text' : "Download",
-			'img' : {
-				desktop : './style/img/action_download_custom24.svg',
-				tablet : './style/img/download_custom.png',
-				phone : './style/img/download_custom.png'
-			},
-			'setup' : setupGettyDownload,
-			'select' : AssetActions.downloadViaShareDialog
-		};
-
-		otui.GalleryAssetActions.register(entry, 1);
-		otui.InspectorAssetActions.register(entry, 1);
+		otui.GalleryAssetActions.modify("downloadcustom", {'text':'Download','setup':setupGettyDownload,'select':AssetActions.downloadViaShareDialog});
+		otui.InspectorAssetActions.modify("downloadcustom", {'text':'Download', 'setup':setupGettyDownload,'select':AssetActions.downloadViaShareDialog});
 	});
 })(otui);
