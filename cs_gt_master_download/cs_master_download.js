@@ -42,34 +42,16 @@
 			   resource.content_type == "BITMAP"
 		if (show){ 
 			var text = " (" + otui.FileUploadManager.createDisplayFileSize(resource.master_content_info.content_size) + ")";
-			this.title += text;
+			this.title = "Download Original " + text;
 		}
 		return show
 	}
 
-	otui.GalleryAssetActions.remove('download');
-	otui.InspectorAssetActions.remove('download');
-
 	otui.GalleryAssetActions.remove('downloadpreview');
 	otui.InspectorAssetActions.remove('downloadpreview');
-
-	otui.GalleryAssetActions.remove('downloadcustom');
-	otui.InspectorAssetActions.remove('downloadcustom');
 	
 	otui.ready(function() {
-		var entry = {
-			'name' : 'download',
-			'text' : 'Download Original' ,
-			'img' : {
-				desktop: './style/img/dowload_original24.svg',
-				tablet: './style/img/dowload_original24.svg',
-				phone: './style/img/dowload_original24.svg'
-			},
-			'select' : downloadOriginal,
-			'setup' : setupDownloadOriginal
-		};
-
-		otui.GalleryAssetActions.register(entry, 1);
-		otui.InspectorAssetActions.register(entry, 1);
+		otui.GalleryAssetActions.modify("download", {'select':downloadOriginal,'setup':setupDownloadOriginal});
+		otui.InspectorAssetActions.modify("download", {'select':downloadOriginal,'setup':setupDownloadOriginal});
 	});
 })(otui);
