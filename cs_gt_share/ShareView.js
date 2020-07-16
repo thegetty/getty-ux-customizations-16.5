@@ -30,7 +30,6 @@
 	}
 
 	exports.ShareView.createDeliveryMethods = function(optionsPane) {
-		console.log("create delivery methods")
 		var deliveryMethods = _shareDeliveryMethods;
 		if (isDownloadDelivery)
 			deliveryMethods = _downloadDeliveryMethods;
