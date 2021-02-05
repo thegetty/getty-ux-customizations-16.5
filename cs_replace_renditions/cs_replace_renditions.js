@@ -1,15 +1,15 @@
 (function(otui) {
 	function replaceRenditions(event, resource, parent) {
-		otui.NotificationManager.showNotification({
-			'message' : "replacing rendition",
-			'status' : "information"
-		});
 		if (resource) {
 			event.stopPropagation();
+			otui.NotificationManager.showNotification({
+				'message' : "Executing replace renditions request.",
+				'status' : "information"
+			});
 			RenditionsManager.replaceRenditions(resource.asset_id, function(
 					success) {
 				if (success) {
-					parentView = view = otui.Views.containing(parent);
+					parentView = otui.Views.containing(parent);
 					parentView.reload();
 				} else {
 					otui.NotificationManager.showNotification({
@@ -20,11 +20,10 @@
 			})
 		}
 	}
-	
-	function isEligible(usergroups){
+
+	function isEligible(usergroups) {
 		is_eligible = false;
-		usergroups
-			.forEach(function(usergroup) {
+		usergroups.forEach(function(usergroup) {
 			if (usergroup === 'Administrators'
 					|| usergroup === 'Asset Administrators') {
 				is_eligible = true
@@ -38,11 +37,9 @@
 			return false;
 		var is_eligible = GtUserGroupManager.getUserGroups(isEligible)
 		var isFolder = (otui.resourceAccessors.type(resource) == 'folder');
-		var show = is_eligible && 
-			   !isFolder && 
-			   !resource.deleted && 
-			   resource.content_state !== "SEL_DEL" && 
-			   resource.content_state !== "DELETED" 
+		var show = is_eligible && !isFolder && !resource.deleted
+				&& resource.content_state !== "SEL_DEL"
+				&& resource.content_state !== "DELETED"
 	}
 
 	otui.ready(function() {
